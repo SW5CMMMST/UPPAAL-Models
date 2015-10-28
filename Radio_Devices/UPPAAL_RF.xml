@@ -20,21 +20,21 @@ clock x;</declaration>
 			<name x="-120" y="-204">Idle</name>
 			<label kind="invariant" x="-178" y="-187">x &lt;= S</label>
 		</location>
-		<location id="id2" x="-34" y="161">
-			<name x="-136" y="152">Transmitting</name>
+		<location id="id2" x="-357" y="0">
+			<name x="-459" y="-9">Transmitting</name>
 		</location>
-		<location id="id3" x="110" y="-85">
-			<name x="136" y="-93">Receiving</name>
+		<location id="id3" x="110" y="0">
+			<name x="136" y="-8">Receiving</name>
 		</location>
-		<location id="id4" x="59" y="34">
-			<name x="76" y="8">Tx_Or_Rx</name>
+		<location id="id4" x="-110" y="0">
+			<name x="-93" y="-26">Tx_Or_Rx</name>
 		</location>
 		<init ref="id1"/>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id2"/>
-			<label kind="guard" x="34" y="93">(i % (N-1)) == id</label>
-			<label kind="synchronisation" x="34" y="76">tx!</label>
+			<label kind="guard" x="-246" y="17">i == id</label>
+			<label kind="synchronisation" x="-246" y="0">tx!</label>
 		</transition>
 		<transition>
 			<source ref="id0"/>
@@ -47,8 +47,9 @@ clock x;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id4"/>
-			<label kind="guard" x="-92" y="-102">x == S</label>
-			<label kind="assignment" x="-8" y="-85">i++, x:=0</label>
+			<label kind="guard" x="-187" y="-110">x == S</label>
+			<label kind="assignment" x="-178" y="-93">i =(i+1)%N, 
+x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id3"/>
@@ -61,8 +62,8 @@ clock x;</declaration>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id3"/>
-			<label kind="guard" x="119" y="-51">(i % (N-1) )!= id</label>
-			<label kind="synchronisation" x="119" y="-34">tx?</label>
+			<label kind="guard" x="-8" y="0">i != id</label>
+			<label kind="synchronisation" x="-8" y="17">tx?</label>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
@@ -71,11 +72,5 @@ clock x;</declaration>
 system Device;
     </system>
 	<queries>
-		<query>
-			<formula>A[] forall (a : id_t) forall (b : id_t)  (Device(a).Transmitting &amp;&amp; Device(b).Transmitting)
-			</formula>
-			<comment>
-			</comment>
-		</query>
 	</queries>
 </nta>
