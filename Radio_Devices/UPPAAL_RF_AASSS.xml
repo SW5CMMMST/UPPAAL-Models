@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+clock now;
+const int N = 10;
+const int S = 20;
+broadcast chan tx;
+broadcast chan done;
+typedef int[0,N-1] id_t;</declaration>
+	<template>
+		<name x="5" y="5">Device</name>
+		<parameter>const id_t id</parameter>
+		<declaration>// Place local declarations here.
+int i;
+clock x;</declaration>
+		<location id="id0" x="-153" y="-170">
+			<name x="-163" y="-204">Idle</name>
+			<label kind="invariant" x="-170" y="-221">x &lt;= S</label>
+		</location>
+		<location id="id1" x="-306" y="-51">
+			<name x="-408" y="-60">Transmitting</name>
+			<label kind="invariant" x="-340" y="-34">x &lt;= S*2</label>
+		</location>
+		<location id="id2" x="34" y="-51">
+			<name x="60" y="-59">Receiving</name>
+			<label kind="invariant" x="24" y="-34">x &lt;= S*2</label>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-93" y="-42">x ==S and
+i !=id</label>
+			<label kind="synchronisation" x="-93" y="-8">tx?</label>
+			<nail x="-153" y="-51"/>
+			<nail x="8" y="-51"/>
+			<nail x="17" y="-51"/>
+			<nail x="17" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-229" y="-42">x == S and
+i == id</label>
+			<label kind="synchronisation" x="-229" y="-8">tx!</label>
+			<nail x="-153" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="42" y="-153">done?</label>
+			<label kind="assignment" x="41" y="-187">x:=0,
+i:=(i+1)%N</label>
+			<nail x="33" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-382" y="-161">done!</label>
+			<label kind="assignment" x="-382" y="-195">x:=0,
+i:=(i+1)%N</label>
+			<nail x="-306" y="-170"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+// List one or more processes to be composed into a system.
+system Device;
+    </system>
+	<queries>
+		<query>
+			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Idle)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Transmitting)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
