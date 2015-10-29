@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+clock now;
+const int MAX_DEVICES = 3;
+int N = 2;
+const int S = 20;
+broadcast chan tx;
+broadcast chan done;
+broadcast chan announcing;
+typedef int[0, MAX_DEVICES] id_t;</declaration>
+	<template>
+		<name x="5" y="5">Device</name>
+		<parameter>const id_t id, bool connected</parameter>
+		<declaration>// Place local declarations here.
+int i;
+clock x;
+//bool connected;</declaration>
+		<location id="id0" x="-238" y="170">
+			<name x="-272" y="187">Announce</name>
+		</location>
+		<location id="id1" x="-68" y="170">
+			<name x="-102" y="187">EmptySlot</name>
+		</location>
+		<location id="id2" x="-153" y="-170">
+			<name x="-144" y="-204">Idle</name>
+			<label kind="invariant" x="-221" y="-204">x &lt;= S</label>
+		</location>
+		<location id="id3" x="-340" y="-68">
+			<name x="-442" y="-77">Transmitting</name>
+			<label kind="invariant" x="-374" y="-51">x &lt;= S*2</label>
+		</location>
+		<location id="id4" x="34" y="-68">
+			<name x="60" y="-76">Receiving</name>
+			<label kind="invariant" x="24" y="-51">x &lt;= S*2</label>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-144" y="110">i == N and 
+connected</label>
+			<label kind="assignment" x="-136" y="153">x:=0</label>
+			<nail x="-153" y="170"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-433" y="178">N++,
+connected := true, 
+i:=0</label>
+			<nail x="-476" y="170"/>
+			<nail x="-476" y="-238"/>
+			<nail x="-153" y="-238"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-374" y="34">not connected and
+i == N</label>
+			<label kind="synchronisation" x="-374" y="68">announcing!</label>
+			<label kind="assignment" x="-220" y="34">x:=0</label>
+			<nail x="-153" y="34"/>
+			<nail x="-238" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="7" y="178">i:=0,
+x:=0</label>
+			<nail x="169" y="170"/>
+			<nail x="169" y="-238"/>
+			<nail x="-154" y="-238"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-59" y="25">i == N and
+connected</label>
+			<label kind="synchronisation" x="-59" y="59">announcing?</label>
+			<label kind="assignment" x="-59" y="76">x:=0</label>
+			<nail x="-153" y="34"/>
+			<nail x="-68" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-93" y="-59">x ==S and
+i !=id</label>
+			<label kind="synchronisation" x="-93" y="-25">tx?</label>
+			<nail x="-153" y="-68"/>
+			<nail x="8" y="-68"/>
+			<nail x="17" y="-68"/>
+			<nail x="17" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-246" y="-59">x == S and
+i == id and
+connected</label>
+			<label kind="synchronisation" x="-246" y="-8">tx!</label>
+			<nail x="-153" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id2"/>
+			<label kind="guard" x="42" y="-212">x &gt;= S</label>
+			<label kind="synchronisation" x="42" y="-161">done?</label>
+			<label kind="assignment" x="42" y="-195">x:=0,
+i:=(i+1)%(N+1)</label>
+			<nail x="33" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-408" y="-170">done!</label>
+			<label kind="assignment" x="-408" y="-204">x:=0,
+i:=(i+1)%(N+1)</label>
+			<nail x="-340" y="-170"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Dev0 = Device(0, true);
+Dev1 = Device(1, true);
+Dev2 = Device(2, false);
+// List one or more processes to be composed into a system.
+system Dev0, Dev1, Dev2;
+
+</system>
+	<queries>
+		<query>
+			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Idle)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Transmitting)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
