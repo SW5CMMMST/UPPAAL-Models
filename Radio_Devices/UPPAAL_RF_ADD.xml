@@ -85,7 +85,7 @@ connected</label>
 			<target ref="id3"/>
 			<label kind="guard" x="-263" y="-68">i == id and
 connected</label>
-			<label kind="synchronisation" x="-263" y="-17">tick?</label>
+			<label kind="synchronisation" x="-263" y="-34">tick?</label>
 			<nail x="-153" y="-68"/>
 		</transition>
 		<transition>
@@ -133,18 +133,6 @@ system Clck, Dev0, Dev1, Dev2;
 	<queries>
 		<query>
 			<formula>A[] (not (Dev0.Transmitting &amp;&amp; (Dev1.Transmitting || Dev2.Transmitting))) &amp;&amp; (not(Dev1.Transmitting &amp;&amp; Dev2.Transmitting))
-			</formula>
-			<comment>
-			</comment>
-		</query>
-		<query>
-			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Idle)
-			</formula>
-			<comment>
-			</comment>
-		</query>
-		<query>
-			<formula>A[] forall (a : id_t) forall (b : id_t) not (a != b &amp;&amp; Device(a).Transmitting &amp;&amp; Device(b).Transmitting)
 			</formula>
 			<comment>
 			</comment>
