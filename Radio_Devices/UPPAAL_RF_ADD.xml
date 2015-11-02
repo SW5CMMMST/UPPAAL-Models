@@ -146,7 +146,7 @@ system Clck, Dev0, Dev1, Dev2;
 			</comment>
 		</query>
 		<query>
-			<formula>E&lt;&gt; (Dev2.Announce &amp;&amp; (Dev1.EmptySlot &amp;&amp; Dev0.EmptySlot))
+			<formula>E&lt;&gt; not (Dev2.Announce &amp;&amp; ( not (Dev1.EmptySlot || Dev0.EmptySlot)))
 			</formula>
 			<comment>
 			</comment>
