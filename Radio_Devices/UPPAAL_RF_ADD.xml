@@ -146,6 +146,12 @@ system Clck, Dev0, Dev1, Dev2;
 			</comment>
 		</query>
 		<query>
+			<formula>A&lt;&gt; Dev0.connected == true &amp;&amp; Dev1.connected == true &amp;&amp; Dev2.connected == true
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
 			<formula>E&lt;&gt; not (Dev2.Announce &amp;&amp; ( not (Dev1.EmptySlot || Dev0.EmptySlot)))
 			</formula>
 			<comment>
