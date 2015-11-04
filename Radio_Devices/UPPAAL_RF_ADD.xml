@@ -20,7 +20,7 @@ int i;</declaration>
 			<name x="-272" y="187">Announce</name>
 		</location>
 		<location id="id1" x="-68" y="170">
-			<name x="-102" y="187">EmptySlot</name>
+			<name x="-93" y="187">EmptySlot</name>
 		</location>
 		<location id="id2" x="-153" y="-170">
 			<name x="-144" y="-204">Idle</name>
@@ -46,9 +46,9 @@ i:=0</label>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id0"/>
-			<label kind="guard" x="-374" y="34">not connected and
-i == N</label>
-			<label kind="synchronisation" x="-374" y="68">tick?</label>
+			<label kind="guard" x="-331" y="25">i == N and
+not connected</label>
+			<label kind="synchronisation" x="-331" y="59">tick?</label>
 			<nail x="-153" y="34"/>
 			<nail x="-238" y="34"/>
 		</transition>
@@ -73,8 +73,9 @@ connected</label>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id4"/>
-			<label kind="guard" x="-93" y="-68">i !=id</label>
-			<label kind="synchronisation" x="-93" y="-34">tick?</label>
+			<label kind="guard" x="-119" y="-68">i !=id and 
+i &lt; N</label>
+			<label kind="synchronisation" x="-119" y="-93">tick?</label>
 			<nail x="-153" y="-68"/>
 			<nail x="8" y="-68"/>
 			<nail x="17" y="-68"/>
@@ -83,23 +84,24 @@ connected</label>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-263" y="-68">i == id and
+			<label kind="guard" x="-272" y="-68">i == id and
+i &lt; N and
 connected</label>
-			<label kind="synchronisation" x="-263" y="-34">tick?</label>
+			<label kind="synchronisation" x="-272" y="-93">tick?</label>
 			<nail x="-153" y="-68"/>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="42" y="-161">tick?</label>
-			<label kind="assignment" x="42" y="-195">i:=(i+1)%(N+1)</label>
+			<label kind="synchronisation" x="-68" y="-170">tick?</label>
+			<label kind="assignment" x="-68" y="-195">i:=(i+1)%(N+1)</label>
 			<nail x="33" y="-170"/>
 		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="-408" y="-170">tick?</label>
-			<label kind="assignment" x="-408" y="-204">i:=(i+1)%(N+1)</label>
+			<label kind="synchronisation" x="-314" y="-170">tick?</label>
+			<label kind="assignment" x="-314" y="-195">i:=(i+1)%(N+1)</label>
 			<nail x="-340" y="-170"/>
 		</transition>
 	</template>
@@ -139,6 +141,18 @@ system Clck, Dev0, Dev1, Dev2;
 		</query>
 		<query>
 			<formula>A[] not deadlock
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; Dev0.connected == true &amp;&amp; Dev1.connected == true &amp;&amp; Dev2.connected == true
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; not (Dev2.Announce &amp;&amp; ( not (Dev1.EmptySlot || Dev0.EmptySlot)))
 			</formula>
 			<comment>
 			</comment>
