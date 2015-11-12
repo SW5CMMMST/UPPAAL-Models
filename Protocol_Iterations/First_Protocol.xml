@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int Initial_Wait_Time = 20000;
+int n = 0;                    // Number of Timeslots connected
+int i = 0;                    // Current time slot in the frame
+int TSL = 80;                 //Timeslot Length
+clock global_x;
+
+
+
+//Channel
+broadcast chan transmit;
+
+
+//Device Creation
+const int N = 6;
+typedef int[1,N] id_t;</declaration>
+	<template>
+		<name x="5" y="5">Device</name>
+		<parameter>const id_t id</parameter>
+		<declaration>// Place local declarations here.
+clock x_local;
+int k = -1;                     //Timeslot
+int c = 1;
+bool receivedTimeOver = false;
+bool haveTransmitted = false;
+bool Connected = false;
+
+// Local copies of globals
+int n_local = 0;                // Number of devices connected
+int i_local = 0;               // Current time slot in the frame
+</declaration>
+		<location id="id0" x="433" y="25">
+			<name x="374" y="-25">Randomizer</name>
+			<label kind="invariant" x="374" y="-8">x_local&lt;=1</label>
+		</location>
+		<location id="id1" x="535" y="119">
+			<name x="552" y="93">Sync_Time</name>
+			<label kind="invariant" x="552" y="110">x_local&lt;=5</label>
+		</location>
+		<location id="id2" x="238" y="-272">
+			<name x="221" y="-306">User_Code</name>
+			<label kind="invariant" x="221" y="-323">x_local &lt;= TSL</label>
+		</location>
+		<location id="id3" x="238" y="246">
+			<name x="178" y="187">Attempt_Connection</name>
+			<label kind="invariant" x="212" y="212">x_local&lt;=5</label>
+		</location>
+		<location id="id4" x="646" y="-68">
+		</location>
+		<location id="id5" x="442" y="680">
+			<name x="432" y="646">Sync_time</name>
+			<label kind="invariant" x="425" y="697">x_local&lt;=5</label>
+		</location>
+		<location id="id6" x="-204" y="374">
+			<name x="-297" y="348">User_code</name>
+			<label kind="invariant" x="-306" y="382">x_local&lt;=TSL</label>
+		</location>
+		<location id="id7" x="748" y="374">
+			<name x="773" y="348">Receiving</name>
+			<label kind="invariant" x="773" y="374">x_local&lt;= TSL/2</label>
+		</location>
+		<location id="id8" x="34" y="680">
+			<name x="-68" y="663">Transmitting</name>
+			<committed/>
+		</location>
+		<location id="id9" x="238" y="374">
+			<name x="246" y="331">Connected_To_Network</name>
+			<committed/>
+		</location>
+		<location id="id10" x="-204" y="127">
+			<name x="-323" y="118">Create_Network</name>
+			<committed/>
+		</location>
+		<location id="id11" x="238" y="-68">
+			<name x="127" y="-59">Network_Found</name>
+			<committed/>
+		</location>
+		<location id="id12" x="-204" y="-68">
+			<name x="-263" y="-102">Listen_For_Network</name>
+			<label kind="invariant" x="-314" y="-119">x_local&lt;=Initial_Wait_Time+(id*1000)</label>
+		</location>
+		<location id="id13" x="-467" y="-68">
+			<name x="-492" y="-102">Initialize</name>
+		</location>
+		<init ref="id13"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id4"/>
+			<label kind="guard" x="527" y="-17">c != id 
+and x_local &gt; 0</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id0"/>
+			<label kind="guard" x="119" y="-17">i_local == n_local 
+and x_local == 0</label>
+			<label kind="assignment" x="119" y="25">c++</label>
+			<nail x="238" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="501" y="51">c == id</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="348" y="110">haveTransmitted = true,
+k=n,
+i = 1,
+i_local = 1,
+n = n+1,
+n_local = n_local+1,
+global_x = x_local</label>
+			<nail x="535" y="246"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id11"/>
+			<label kind="guard" x="85" y="-195">x_local == TSL</label>
+			<label kind="assignment" x="93" y="-170">x_local:= 0</label>
+			<nail x="178" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id2"/>
+			<label kind="guard" x="280" y="-238">x_local &gt;0</label>
+			<nail x="306" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="246" y="272">transmit!</label>
+			<label kind="assignment" x="246" y="289">Connected = true</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="450" y="-170">transmit?</label>
+			<label kind="assignment" x="450" y="-153">i_local = i,
+n_local = n,
+x_local:=global_x,
+c = c % 10</label>
+			<nail x="408" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id4"/>
+			<label kind="guard" x="450" y="-271">x_local==0
+and i_local != n_local</label>
+			<nail x="374" y="-178"/>
+			<nail x="374" y="-229"/>
+			<nail x="646" y="-229"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id9"/>
+			<label kind="guard" x="552" y="476">x_local == TSL/2</label>
+			<label kind="assignment" x="552" y="493">i_local = (i_local % n_local)+1,
+receivedTimeOver = true</label>
+			<nail x="748" y="476"/>
+			<nail x="510" y="476"/>
+			<nail x="510" y="399"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id8"/>
+			<label kind="guard" x="178" y="714">x_local==5</label>
+			<label kind="assignment" x="59" y="680">i = (i_local % n_local)+1,
+n = n_local,
+global_x = x_local</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id5"/>
+			<label kind="guard" x="365" y="518">i_local == k
+and x_local == 0</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="629" y="255">transmit?</label>
+			<label kind="assignment" x="629" y="178">i_local = i,
+n_local = n,
+receivedTimeOver = true,
+x_local = global_x</label>
+			<nail x="748" y="272"/>
+			<nail x="510" y="272"/>
+			<nail x="510" y="357"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="102" y="586">transmit!</label>
+			<label kind="assignment" x="102" y="603">haveTransmitted = true,
+i_local=(i_local % n_local)+1</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-144" y="399">x_local==TSL</label>
+			<label kind="assignment" x="-144" y="416">x_local:=0,
+receivedTimeOver = false,
+haveTransmitted = false</label>
+			<nail x="25" y="399"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-144" y="289">receivedTimeOver == true 
+or haveTransmitted == true</label>
+			<nail x="17" y="340"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id7"/>
+			<label kind="guard" x="578" y="331">i_local != k 
+and x_local == 0</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-85" y="102">transmit!</label>
+			<label kind="assignment" x="-85" y="136">x_local:=0,
+global_x:=0,
+Connected = true</label>
+			<nail x="-17" y="127"/>
+			<nail x="25" y="127"/>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-442" y="76">x_local == Initial_Wait_Time+(id*1000)</label>
+			<label kind="assignment" x="-178" y="8">i = 1,
+n = 2,
+k = 1,
+i_local = 1,
+n_local = 2</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-34" y="-144">transmit?</label>
+			<label kind="assignment" x="-34" y="-127">i_local = i,
+n_local = n,
+x_local:= 0</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="assignment" x="-391" y="-34">x_local:= 0</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+// List one or more processes to be composed into a system.
+system Device;
+    </system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt;  Device(1).Connected == 1 &amp;&amp; Device(2).Connected == 1 &amp;&amp; Device(3).Connected == 1 &amp;&amp; Device(4).Connected == 1 &amp;&amp; Device(5).Connected == 1 &amp;&amp; Device(6).Connected == 1
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] not deadlock
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
