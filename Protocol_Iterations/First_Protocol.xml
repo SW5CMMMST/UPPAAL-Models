@@ -2,11 +2,12 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-int Initial_Wait_Time = 20000;
+int Initial_Wait_Time = 260;
 int n = 0;                    // Number of Timeslots connected
 int i = 0;                    // Current time slot in the frame
 int TSL = 80;                 //Timeslot Length
 clock global_x;
+clock startup;
 
 
 
@@ -15,7 +16,7 @@ broadcast chan transmit;
 
 
 //Device Creation
-const int N = 6;
+const int N = 3;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -33,8 +34,8 @@ int n_local = 0;                // Number of devices connected
 int i_local = 0;               // Current time slot in the frame
 </declaration>
 		<location id="id0" x="433" y="25">
-			<name x="374" y="-25">Randomizer</name>
-			<label kind="invariant" x="374" y="-8">x_local&lt;=1</label>
+			<name x="399" y="-17">Randomizer</name>
+			<committed/>
 		</location>
 		<location id="id1" x="535" y="119">
 			<name x="552" y="93">Sync_Time</name>
@@ -80,30 +81,23 @@ int i_local = 0;               // Current time slot in the frame
 		</location>
 		<location id="id12" x="-204" y="-68">
 			<name x="-263" y="-102">Listen_For_Network</name>
-			<label kind="invariant" x="-314" y="-119">x_local&lt;=Initial_Wait_Time+(id*1000)</label>
+			<label kind="invariant" x="-314" y="-119">x_local&lt;=Initial_Wait_Time</label>
 		</location>
 		<location id="id13" x="-467" y="-68">
 			<name x="-492" y="-102">Initialize</name>
+			<label kind="invariant" x="-493" y="-51">startup&lt;= 300</label>
 		</location>
 		<init ref="id13"/>
-		<transition>
-			<source ref="id0"/>
-			<target ref="id4"/>
-			<label kind="guard" x="527" y="-17">c != id 
-and x_local &gt; 0</label>
-		</transition>
 		<transition>
 			<source ref="id11"/>
 			<target ref="id0"/>
 			<label kind="guard" x="119" y="-17">i_local == n_local 
 and x_local == 0</label>
-			<label kind="assignment" x="119" y="25">c++</label>
 			<nail x="238" y="25"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id1"/>
-			<label kind="guard" x="501" y="51">c == id</label>
 		</transition>
 		<transition>
 			<source ref="id1"/>
@@ -142,8 +136,7 @@ global_x = x_local</label>
 			<label kind="synchronisation" x="450" y="-170">transmit?</label>
 			<label kind="assignment" x="450" y="-153">i_local = i,
 n_local = n,
-x_local:=global_x,
-c = c % 10</label>
+x_local:=global_x</label>
 			<nail x="408" y="-68"/>
 		</transition>
 		<transition>
@@ -233,7 +226,7 @@ Connected = true</label>
 		<transition>
 			<source ref="id12"/>
 			<target ref="id10"/>
-			<label kind="guard" x="-442" y="76">x_local == Initial_Wait_Time+(id*1000)</label>
+			<label kind="guard" x="-442" y="76">x_local == Initial_Wait_Time</label>
 			<label kind="assignment" x="-178" y="8">i = 1,
 n = 2,
 k = 1,
@@ -251,17 +244,17 @@ x_local:= 0</label>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id12"/>
-			<label kind="assignment" x="-391" y="-34">x_local:= 0</label>
+			<label kind="assignment" x="-365" y="-59">startup:= 0,
+x_local:=0</label>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
-
 // List one or more processes to be composed into a system.
 system Device;
     </system>
 	<queries>
 		<query>
-			<formula>E&lt;&gt;  Device(1).Connected == 1 &amp;&amp; Device(2).Connected == 1 &amp;&amp; Device(3).Connected == 1 &amp;&amp; Device(4).Connected == 1 &amp;&amp; Device(5).Connected == 1 &amp;&amp; Device(6).Connected == 1
+			<formula>A&lt;&gt;  Device(1).Connected == 1 &amp;&amp; Device(2).Connected == 1 &amp;&amp; Device(3).Connected == 1
 			</formula>
 			<comment>
 			</comment>
