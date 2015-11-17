@@ -23,7 +23,7 @@ typedef int[1,N] id_t;</declaration>
 		<parameter>const id_t id</parameter>
 		<declaration>// Place local declarations here.
 clock x_local;
-clock sync_time;
+clock transmit_time;
 int k = -1;                     //Timeslot
 int c = 1;
 bool receivedTimeOver = false;
@@ -36,7 +36,7 @@ int i_local = 0;               // Current time slot in the frame
 </declaration>
 		<location id="id0" x="535" y="119">
 			<name x="552" y="93">Sync_Time</name>
-			<label kind="invariant" x="552" y="110">sync_time&lt;=5</label>
+			<label kind="invariant" x="552" y="110">transmit_time&lt;=5</label>
 		</location>
 		<location id="id1" x="238" y="-272">
 			<name x="221" y="-306">User_Code</name>
@@ -50,7 +50,7 @@ int i_local = 0;               // Current time slot in the frame
 		</location>
 		<location id="id4" x="442" y="680">
 			<name x="432" y="646">Sync_time</name>
-			<label kind="invariant" x="425" y="697">sync_time&lt;=5</label>
+			<label kind="invariant" x="425" y="697">transmit_time&lt;=5</label>
 		</location>
 		<location id="id5" x="-204" y="374">
 			<name x="-297" y="348">User_code</name>
@@ -90,12 +90,12 @@ int i_local = 0;               // Current time slot in the frame
 			<target ref="id0"/>
 			<label kind="guard" x="212" y="-8">i_local == n_local 
 and x_local == TSL/2</label>
-			<label kind="assignment" x="212" y="34">sync_time:=0</label>
+			<label kind="assignment" x="212" y="34">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id2"/>
-			<label kind="guard" x="365" y="255">sync_time == 5</label>
+			<label kind="guard" x="365" y="255">transmit_time == 5</label>
 			<label kind="assignment" x="348" y="110">haveTransmitted = true,
 k=n,
 i = 1,
@@ -156,7 +156,7 @@ x_local:=0</label>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id7"/>
-			<label kind="guard" x="221" y="697">sync_time==5</label>
+			<label kind="guard" x="221" y="697">transmit_time==5</label>
 			<label kind="assignment" x="59" y="680">i = (i_local % n_local)+1,
 n = n_local</label>
 		</transition>
@@ -165,7 +165,7 @@ n = n_local</label>
 			<target ref="id4"/>
 			<label kind="guard" x="357" y="518">i_local == k
 and x_local==TSL/2</label>
-			<label kind="assignment" x="331" y="493">sync_time:=0</label>
+			<label kind="assignment" x="331" y="493">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id6"/>
@@ -252,7 +252,7 @@ system Device;
     </system>
 	<queries>
 		<query>
-			<formula>A&lt;&gt; forall(i: id_t) Device(i).Connected 
+			<formula>A&lt;&gt; forall(i: id_t) Device(i).Connected
 			</formula>
 			<comment>
 			</comment>
@@ -276,7 +276,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).n_local == Device(j).n_local 
+			<formula>A&lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).n_local == Device(j).n_local
 			</formula>
 			<comment>
 			</comment>
@@ -294,7 +294,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;= 1060] (&lt;&gt; forall(i : id_t) Device(i).Connected)
+			<formula>Pr[&lt;= 1090] (&lt;&gt; forall(i : id_t) Device(i).Connected)
 			</formula>
 			<comment>
 			</comment>
