@@ -7,14 +7,15 @@ int i = 0;                    // Current time slot in the frame
 const int Delta = 80;                 //Timeslot Length
 const int Delta_Com = Delta/2;
 const int Real_Transmit_Time = Delta/3;
-int Initial_Wait_Time = Delta*3;
+const int Initial_Wait_Time = Delta*3;
+int Startup_Time = Initial_Wait_Time*2;
 clock startup;
 
 //Channel
 broadcast chan transmit;
 
 //Device Creation
-const int N = 3;
+const int N = 6;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -72,7 +73,7 @@ n = local_n;
 		</location>
 		<location id="id1" x="238" y="204">
 			<name x="255" y="178">Transmitting_Not_Connected</name>
-			<label kind="invariant" x="255" y="204">transmit_time&lt;=Real_Transmit_Time</label>
+			<label kind="invariant" x="255" y="195">transmit_time&lt;=Real_Transmit_Time</label>
 		</location>
 		<location id="id2" x="238" y="-68">
 			<name x="161" y="-102">User_Code_Not_Connected</name>
@@ -107,7 +108,7 @@ n = local_n;
 		</location>
 		<location id="id10" x="-68" y="-68">
 			<name x="-93" y="-102">Initialize</name>
-			<label kind="invariant" x="-145" y="-119">startup&lt;= Initial_Wait_Time</label>
+			<label kind="invariant" x="-161" y="-119">startup&lt;= Startup_Time</label>
 		</location>
 		<init ref="id10"/>
 		<transition>
@@ -235,8 +236,8 @@ and x == Delta_Com</label>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id9"/>
-			<label kind="guard" x="-255" y="-42">startup == Initial_Wait_Time</label>
-			<label kind="assignment" x="-144" y="-25">startup:= 0,
+			<label kind="guard" x="-229" y="-51">startup == Startup_Time</label>
+			<label kind="assignment" x="-144" y="-34">startup:= 0,
 x:= 0</label>
 		</transition>
 	</template>
@@ -258,7 +259,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>A[] not(Device(1).Transmitting &amp;&amp; Device(2).Transmitting &amp;&amp; Device(3).Transmitting)
+			<formula>A[] forall(i : id_t) forall(j : id_t)  Device(i).Transmitting and Device(j).Transmitting imply i == j
 			</formula>
 			<comment>
 			</comment>
@@ -277,6 +278,18 @@ system Device;
 		</query>
 		<query>
 			<formula>A&lt;&gt; forall(i : id_t) forall(j :id_t) Device(i).k != Device(j).local_n
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; forall(i : id_t)  Device(i).k &lt; n and Device(i).k &gt; 0
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; n == N+1
 			</formula>
 			<comment>
 			</comment>
