@@ -2,8 +2,9 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-int n = 0;                    // Number of Timeslots connected
-int i = 0;                    // Current time slot in the frame
+int n = 0;                            // Number of Timeslots connected
+int i = 0;                            // Current time slot in the frame
+int ConnectedCounter = 0;             //Global Counter for Connected Devices
 const int Delta = 80;                 //Timeslot Length
 const int Delta_Proc = Delta/2;
 const int Real_Transmit_Time = Delta/3;
@@ -248,7 +249,7 @@ system Device;
     </system>
 	<queries>
 		<query>
-			<formula>A&lt;&gt; forall(i: id_t) Device(i).Connected
+			<formula>A&lt;&gt; forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(i).k == Device(j).k imply i == j
 			</formula>
 			<comment>
 			</comment>
@@ -266,37 +267,37 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t) forall(j : id_t) (Device(i).User_Code and Device(j).User_Code and Device(i).local_i == Device(j).local_i)
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).User_Code and Device(j).User_Code imply Device(i).local_i == Device(j).local_i
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).local_n == Device(j).local_n
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply Device(i).local_n == Device(j).local_n
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t) forall(j :id_t) Device(i).k != Device(j).local_n
+			<formula>A[] forall(i : id_t) forall(j :id_t) Device(i).k != Device(j).local_n
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t)  Device(i).k &lt; n and Device(i).k &gt; 0
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply Device(i).k &lt; n and Device(i).k &gt; 0
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; n == N+1
+			<formula>A[] n == N+1 imply forall(i: id_t) Device(i).Connected
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>A&lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).k == Device(j).k imply i == j
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).k == Device(j).k imply i == j or Device(i).Connected == false or Device(j).Connected == false
 			</formula>
 			<comment>If they have the same k, it will be the same device.
 			</comment>
