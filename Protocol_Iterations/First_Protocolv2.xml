@@ -140,7 +140,7 @@ x:=0</label>
 			<source ref="id2"/>
 			<target ref="id0"/>
 			<label kind="guard" x="-289" y="578">transmit_time==Real_Transmit_Time</label>
-			<label kind="synchronisation" x="-110" y="595">transmit!</label>
+			<label kind="synchronisation" x="-119" y="595">transmit!</label>
 			<label kind="assignment" x="-161" y="612">make_Payload()</label>
 			<nail x="-42" y="467"/>
 		</transition>
