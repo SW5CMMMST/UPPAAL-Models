@@ -3,8 +3,7 @@
 <nta>
 	<declaration>// Place global declarations here.
 int n = 0;                            // Number of Timeslots connected
-int i = 0;            
-clock time;                            // Current time slot in the frame
+int i = 0;                             // Current time slot in the frame
 int Connected_Counter = 0;             //Global Counter for Connected Devices
 const int Delta = 250;                 //Timeslot Length
 const int Delta_Proc = Delta/5;
