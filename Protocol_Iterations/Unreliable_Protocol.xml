@@ -18,7 +18,7 @@ clock m;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 4;
+const int N = 2;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -143,12 +143,13 @@ void make_Payload(){
 		<transition>
 			<source ref="id0"/>
 			<target ref="id6"/>
-			<label kind="guard" x="586" y="629">x==Delta</label>
+			<label kind="guard" x="331" y="493">x==Delta</label>
+			<label kind="assignment" x="256" y="582">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id0"/>
-			<label kind="guard" x="595" y="739">transmit_time &lt;= (Real_Tx_Time/100)</label>
+			<label kind="guard" x="595" y="739">transmit_time &lt;= 40</label>
 		</transition>
 		<transition>
 			<source ref="id2"/>
