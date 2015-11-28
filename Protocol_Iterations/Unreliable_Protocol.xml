@@ -149,7 +149,7 @@ void make_Payload(){
 		<transition>
 			<source ref="id7"/>
 			<target ref="id0"/>
-			<label kind="guard" x="595" y="739">transmit_time &lt;= 40</label>
+			<label kind="guard" x="595" y="739">transmit_time &lt;= (Real_Tx_Time/100)*2</label>
 		</transition>
 		<transition>
 			<source ref="id2"/>
@@ -331,7 +331,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=10000](&lt;&gt;  Device(1).Not_Received)
+			<formula>Pr[&lt;=50000](&lt;&gt;  Device(1).Not_Received)
 			</formula>
 			<comment>
 			</comment>
