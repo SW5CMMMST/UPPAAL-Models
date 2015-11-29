@@ -73,9 +73,9 @@ void make_Payload(){
 
 
 </declaration>
-		<location id="id0" x="850" y="637">
-			<name x="840" y="603">Not_Received</name>
-			<label kind="invariant" x="840" y="654">x&lt;=Delta</label>
+		<location id="id0" x="612" y="637">
+			<name x="620" y="603">Not_Received</name>
+			<label kind="invariant" x="629" y="629">x&lt;=Delta</label>
 		</location>
 		<location id="id1" x="238" y="93">
 			<committed/>
@@ -87,7 +87,7 @@ void make_Payload(){
 			<label kind="invariant" x="59" y="25">x &lt;= Delta</label>
 		</location>
 		<location id="id4" x="510" y="467">
-			<label kind="invariant" x="484" y="433">x&lt;=Delta</label>
+			<label kind="invariant" x="501" y="433">x&lt;=Delta</label>
 		</location>
 		<location id="id5" x="-42" y="467">
 			<label kind="invariant" x="-68" y="433">x&lt;=Delta</label>
@@ -96,9 +96,9 @@ void make_Payload(){
 			<name x="161" y="433">Main_Loop</name>
 			<committed/>
 		</location>
-		<location id="id7" x="510" y="731">
-			<name x="527" y="722">Receving</name>
-			<label kind="invariant" x="527" y="705">x &lt;= Delta</label>
+		<location id="id7" x="382" y="722">
+			<name x="399" y="713">Receving</name>
+			<label kind="invariant" x="399" y="696">x &lt;= Delta</label>
 		</location>
 		<location id="id8" x="-42" y="731">
 			<name x="-85" y="739">Transmitting</name>
@@ -145,14 +145,12 @@ void make_Payload(){
 		<transition>
 			<source ref="id18"/>
 			<target ref="id0"/>
-			<label kind="probability" x="858" y="765">98</label>
-			<nail x="850" y="816"/>
+			<label kind="probability" x="501" y="748">2</label>
 		</transition>
 		<transition>
 			<source ref="id18"/>
 			<target ref="id7"/>
-			<label kind="probability" x="518" y="782">2</label>
-			<nail x="510" y="799"/>
+			<label kind="probability" x="382" y="756">98</label>
 		</transition>
 		<transition>
 			<source ref="id9"/>
@@ -163,9 +161,9 @@ void make_Payload(){
 		<transition>
 			<source ref="id0"/>
 			<target ref="id6"/>
-			<label kind="guard" x="875" y="442">x==Delta</label>
-			<label kind="assignment" x="884" y="459">x:=0</label>
-			<nail x="850" y="408"/>
+			<label kind="guard" x="620" y="442">x==Delta</label>
+			<label kind="assignment" x="629" y="459">x:=0</label>
+			<nail x="612" y="408"/>
 			<nail x="306" y="408"/>
 		</transition>
 		<transition>
@@ -223,14 +221,14 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id6"/>
-			<label kind="guard" x="382" y="425">x== Delta</label>
-			<label kind="assignment" x="382" y="442">x:=0</label>
+			<label kind="guard" x="340" y="425">x== Delta</label>
+			<label kind="assignment" x="340" y="442">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id4"/>
-			<label kind="synchronisation" x="518" y="535">transmit?</label>
-			<label kind="assignment" x="518" y="552">receive(),
+			<label kind="synchronisation" x="467" y="561">transmit?</label>
+			<label kind="assignment" x="467" y="578">receive(),
 x:=Tx_Time</label>
 		</transition>
 		<transition>
@@ -253,18 +251,12 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id6"/>
-			<label kind="guard" x="374" y="561">x == Delta</label>
-			<label kind="assignment" x="374" y="578">x:= 0</label>
+			<label kind="guard" x="297" y="535">x == Delta</label>
+			<label kind="assignment" x="306" y="552">x:= 0</label>
 		</transition>
 		<transition>
 			<source ref="id14"/>
 			<target ref="id6"/>
-		</transition>
-		<transition>
-			<source ref="id9"/>
-			<target ref="id7"/>
-			<label kind="guard" x="340" y="731">local_i != k</label>
-			<label kind="assignment" x="314" y="756">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id9"/>
