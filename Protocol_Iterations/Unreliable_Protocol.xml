@@ -18,7 +18,7 @@ clock m;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 2;
+const int N = 1;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -73,9 +73,9 @@ void make_Payload(){
 
 
 </declaration>
-		<location id="id0" x="586" y="697">
-			<name x="576" y="663">Not_Received</name>
-			<label kind="invariant" x="576" y="714">x&lt;=Delta</label>
+		<location id="id0" x="850" y="637">
+			<name x="840" y="603">Not_Received</name>
+			<label kind="invariant" x="840" y="654">x&lt;=Delta</label>
 		</location>
 		<location id="id1" x="238" y="93">
 			<committed/>
@@ -93,12 +93,12 @@ void make_Payload(){
 			<label kind="invariant" x="-68" y="433">x&lt;=Delta</label>
 		</location>
 		<location id="id6" x="238" y="467">
-			<name x="246" y="442">Main_Loop</name>
+			<name x="161" y="433">Main_Loop</name>
 			<committed/>
 		</location>
 		<location id="id7" x="510" y="731">
-			<name x="484" y="739">Receving</name>
-			<label kind="invariant" x="484" y="756">x &lt;= Delta</label>
+			<name x="527" y="722">Receving</name>
+			<label kind="invariant" x="527" y="705">x &lt;= Delta</label>
 		</location>
 		<location id="id8" x="-42" y="731">
 			<name x="-85" y="739">Transmitting</name>
@@ -139,17 +139,34 @@ void make_Payload(){
 			<name x="-153" y="178">Initialize</name>
 			<label kind="invariant" x="-204" y="161">startup&lt;= Startup_Time</label>
 		</location>
+		<branchpoint id="id18" x="382" y="850">
+		</branchpoint>
 		<init ref="id17"/>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id0"/>
+			<label kind="probability" x="858" y="765">98</label>
+			<nail x="850" y="816"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id7"/>
+			<label kind="probability" x="518" y="782">2</label>
+			<nail x="510" y="799"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id18"/>
+			<label kind="guard" x="272" y="807">local_i != k</label>
+			<nail x="280" y="748"/>
+		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id6"/>
-			<label kind="guard" x="331" y="493">x==Delta</label>
-			<label kind="assignment" x="256" y="582">x:=0</label>
-		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id0"/>
-			<label kind="guard" x="595" y="739">transmit_time &lt;= (Real_Tx_Time/100)*2</label>
+			<label kind="guard" x="875" y="442">x==Delta</label>
+			<label kind="assignment" x="884" y="459">x:=0</label>
+			<nail x="850" y="408"/>
+			<nail x="306" y="408"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
@@ -247,7 +264,7 @@ x:=Tx_Time</label>
 			<source ref="id9"/>
 			<target ref="id7"/>
 			<label kind="guard" x="340" y="731">local_i != k</label>
-			<label kind="assignment" x="323" y="748">transmit_time:=0</label>
+			<label kind="assignment" x="314" y="756">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id9"/>
@@ -331,7 +348,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=50000](&lt;&gt;  Device(1).Not_Received)
+			<formula>Pr[&lt;=2800](&lt;&gt;  Device(1).Not_Received)
 			</formula>
 			<comment>
 			</comment>
