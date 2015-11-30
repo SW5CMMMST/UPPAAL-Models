@@ -140,8 +140,7 @@ void make_Payload(){
 		<transition>
 			<source ref="id7"/>
 			<target ref="id4"/>
-			<label kind="guard" x="-34" y="493">Transmitters &gt;= 2 and
-transmit_time == Real_Tx_Time</label>
+			<label kind="guard" x="-34" y="493">transmit_time == Real_Tx_Time</label>
 			<nail x="-42" y="535"/>
 		</transition>
 		<transition>
@@ -213,7 +212,7 @@ x:=Tx_Time</label>
 			<source ref="id4"/>
 			<target ref="id5"/>
 			<label kind="guard" x="51" y="425">x == Delta</label>
-			<label kind="assignment" x="17" y="425">x:=0</label>
+			<label kind="assignment" x="59" y="442">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id5"/>
@@ -252,8 +251,7 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id13"/>
-			<label kind="guard" x="255" y="255">transmit_time == Real_Tx_Time
-and Transmitters == 1</label>
+			<label kind="guard" x="255" y="255">transmit_time == Real_Tx_Time</label>
 			<label kind="synchronisation" x="255" y="297">transmit!</label>
 			<label kind="assignment" x="255" y="314">join_Network()</label>
 		</transition>
