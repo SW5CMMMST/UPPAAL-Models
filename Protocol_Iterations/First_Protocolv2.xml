@@ -2,8 +2,8 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-int n = 0;                            // Number of Timeslots connected
-int i = 0;                             // Current time slot in the frame
+int n = 2;                             // Number of Timeslots connected
+int i = 1;                             // Current time slot in the frame
 int Connected_Counter = 0;             //Global Counter for Connected Devices
 const int Delta = 250;                 //Timeslot Length
 const int Delta_Proc = Delta/5;
@@ -11,6 +11,7 @@ const int Real_Tx_Time = Delta/2;
 const int Tx_Time = Delta_Proc + Real_Tx_Time;
 const int Initial_Wait_Time = Delta*3;
 int Startup_Time = Initial_Wait_Time*2;
+int Transmitters = 0;
 clock startup;
 clock m;
 
@@ -18,7 +19,7 @@ clock m;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 4;
+const int N = 2;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -26,12 +27,12 @@ typedef int[1,N] id_t;</declaration>
 		<declaration>// Place local declarations here.
 clock x;
 clock transmit_time;
-int k = -1;                     //Timeslot
+int k = 1;                     //Timeslot
 bool Connected = false;
 
 // Local copies of globals
-int local_n = 0;                // Number of devices connected
-int local_i = 0;               // Current time slot in the frame
+int local_n = 2;                // Number of devices connected
+int local_i = 1;               // Current time slot in the frame
 
 void increment_Slot(){
     local_i = (local_i % local_n)+1;
@@ -109,8 +110,8 @@ void make_Payload(){
 			<label kind="invariant" x="118" y="561">x &lt;= Delta_Proc</label>
 		</location>
 		<location id="id10" x="238" y="204">
-			<name x="255" y="178">Transmitting_Not_Connected</name>
-			<label kind="invariant" x="255" y="195">transmit_time&lt;=Real_Tx_Time</label>
+			<name x="255" y="161">Transmitting_Not_Connected</name>
+			<label kind="invariant" x="255" y="178">transmit_time&lt;=Real_Tx_Time</label>
 		</location>
 		<location id="id11" x="238" y="-68">
 			<name x="161" y="-102">User_Code_Not_Connected</name>
@@ -120,8 +121,8 @@ void make_Payload(){
 			<name x="544" y="76">Receiving_Not_Connected</name>
 		</location>
 		<location id="id13" x="238" y="374">
-			<name x="263" y="365">Connected_To_Network</name>
-			<committed/>
+			<name x="255" y="348">Connected_To_Network</name>
+			<label kind="invariant" x="255" y="365">x&lt;= Delta</label>
 		</location>
 		<location id="id14" x="85" y="-68">
 			<name x="42" y="-110">Network_Found</name>
@@ -137,6 +138,13 @@ void make_Payload(){
 		</location>
 		<init ref="id16"/>
 		<transition>
+			<source ref="id7"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-34" y="493">Transmitters &gt;= 2 and
+transmit_time == Real_Tx_Time</label>
+			<nail x="-42" y="535"/>
+		</transition>
+		<transition>
 			<source ref="id1"/>
 			<target ref="id11"/>
 			<label kind="guard" x="391" y="-110">x==Delta</label>
@@ -145,9 +153,9 @@ void make_Payload(){
 		<transition>
 			<source ref="id0"/>
 			<target ref="id10"/>
-			<label kind="guard" x="93" y="127">local_i == local_n
+			<label kind="guard" x="102" y="102">local_i == local_n
 and x == Delta_Proc</label>
-			<label kind="assignment" x="110" y="110">transmit_time:=0</label>
+			<label kind="assignment" x="119" y="144">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id0"/>
@@ -204,15 +212,8 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id5"/>
-			<label kind="guard" x="17" y="442">x == Delta</label>
+			<label kind="guard" x="51" y="425">x == Delta</label>
 			<label kind="assignment" x="17" y="425">x:=0</label>
-		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id4"/>
-			<label kind="guard" x="-263" y="527">transmit_time==Real_Tx_Time</label>
-			<label kind="synchronisation" x="-110" y="544">transmit!</label>
-			<label kind="assignment" x="-161" y="561">make_Payload()</label>
 		</transition>
 		<transition>
 			<source ref="id5"/>
@@ -227,6 +228,8 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id5"/>
+			<label kind="guard" x="246" y="391">x==Delta</label>
+			<label kind="assignment" x="246" y="408">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id8"/>
@@ -237,8 +240,8 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id7"/>
-			<label kind="guard" x="85" y="731">local_i == k</label>
-			<label kind="assignment" x="85" y="748">transmit_time:=0</label>
+			<label kind="guard" x="68" y="731">local_i == k</label>
+			<label kind="assignment" x="68" y="748">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id9"/>
@@ -249,10 +252,10 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id13"/>
-			<label kind="guard" x="246" y="238">transmit_time == Real_Tx_Time</label>
-			<label kind="synchronisation" x="246" y="255">transmit!</label>
-			<label kind="assignment" x="246" y="280">join_Network(),
-x:=0</label>
+			<label kind="guard" x="255" y="255">transmit_time == Real_Tx_Time
+and Transmitters == 1</label>
+			<label kind="synchronisation" x="255" y="297">transmit!</label>
+			<label kind="assignment" x="255" y="314">join_Network()</label>
 		</transition>
 		<transition>
 			<source ref="id14"/>
