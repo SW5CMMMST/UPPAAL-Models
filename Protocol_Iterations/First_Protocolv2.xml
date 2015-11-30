@@ -110,8 +110,8 @@ void make_Payload(){
 			<label kind="invariant" x="118" y="561">x &lt;= Delta_Proc</label>
 		</location>
 		<location id="id10" x="238" y="204">
-			<name x="255" y="161">Transmitting_Not_Connected</name>
-			<label kind="invariant" x="255" y="178">transmit_time&lt;=Real_Tx_Time</label>
+			<name x="255" y="178">Transmitting_Not_Connected</name>
+			<label kind="invariant" x="255" y="195">transmit_time&lt;=Real_Tx_Time</label>
 		</location>
 		<location id="id11" x="238" y="-68">
 			<name x="161" y="-102">User_Code_Not_Connected</name>
@@ -119,6 +119,7 @@ void make_Payload(){
 		</location>
 		<location id="id12" x="518" y="93">
 			<name x="544" y="76">Receiving_Not_Connected</name>
+			<label kind="invariant" x="508" y="110">x&lt;=Delta</label>
 		</location>
 		<location id="id13" x="238" y="374">
 			<name x="255" y="348">Connected_To_Network</name>
@@ -138,9 +139,18 @@ void make_Payload(){
 		</location>
 		<init ref="id16"/>
 		<transition>
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="guard" x="357" y="-25">x==Delta</label>
+			<label kind="assignment" x="382" y="-8">x:=0</label>
+		</transition>
+		<transition>
 			<source ref="id7"/>
 			<target ref="id4"/>
-			<label kind="guard" x="-34" y="493">transmit_time == Real_Tx_Time</label>
+			<label kind="guard" x="-34" y="501">transmit_time 
+  == Real_Tx_Time</label>
+			<label kind="synchronisation" x="-34" y="544">transmit!</label>
+			<label kind="assignment" x="-34" y="561">make_Payload()</label>
 			<nail x="-42" y="535"/>
 		</transition>
 		<transition>
@@ -152,9 +162,9 @@ void make_Payload(){
 		<transition>
 			<source ref="id0"/>
 			<target ref="id10"/>
-			<label kind="guard" x="102" y="102">local_i == local_n
+			<label kind="guard" x="110" y="102">local_i == local_n
 and x == Delta_Proc</label>
-			<label kind="assignment" x="119" y="144">transmit_time:=0</label>
+			<label kind="assignment" x="127" y="144">transmit_time:=0</label>
 		</transition>
 		<transition>
 			<source ref="id0"/>
@@ -165,8 +175,8 @@ and local_i != local_n</label>
 		<transition>
 			<source ref="id11"/>
 			<target ref="id0"/>
-			<label kind="guard" x="246" y="-34">x == Delta_Proc</label>
-			<label kind="assignment" x="246" y="-17">increment_Slot()</label>
+			<label kind="guard" x="136" y="-17">x == Delta_Proc</label>
+			<label kind="assignment" x="136" y="0">increment_Slot()</label>
 		</transition>
 		<transition>
 			<source ref="id12"/>
@@ -185,15 +195,15 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id15"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="-34" y="76">transmit?</label>
-			<label kind="assignment" x="-42" y="93">receive(),
+			<label kind="synchronisation" x="-34" y="102">transmit?</label>
+			<label kind="assignment" x="-42" y="119">receive(),
 x:=Tx_Time</label>
 		</transition>
 		<transition>
 			<source ref="id15"/>
 			<target ref="id13"/>
-			<label kind="guard" x="8" y="323">x == Initial_Wait_Time</label>
-			<label kind="assignment" x="51" y="348">create_Network()</label>
+			<label kind="guard" x="8" y="314">x == Initial_Wait_Time</label>
+			<label kind="assignment" x="51" y="340">create_Network()</label>
 		</transition>
 		<transition>
 			<source ref="id3"/>
@@ -251,9 +261,9 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id10"/>
 			<target ref="id13"/>
-			<label kind="guard" x="255" y="255">transmit_time == Real_Tx_Time</label>
-			<label kind="synchronisation" x="255" y="297">transmit!</label>
-			<label kind="assignment" x="255" y="314">join_Network()</label>
+			<label kind="guard" x="255" y="229">transmit_time == Real_Tx_Time</label>
+			<label kind="synchronisation" x="255" y="246">transmit!</label>
+			<label kind="assignment" x="255" y="272">join_Network()</label>
 		</transition>
 		<transition>
 			<source ref="id14"/>
