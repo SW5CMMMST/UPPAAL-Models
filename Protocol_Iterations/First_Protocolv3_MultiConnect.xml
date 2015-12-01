@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int n = 0;                             // Number of Timeslots connected
+int i = 0;                             // Current time slot in the frame
+int joining_ID = -1;       
+int join_Count = 0;             // The ID of the device joining
+int Connected_Counter = 0;             //Global Counter for Connected Devices
+int emptySubSlotA = 0;
+int emptySubSlotB = 0;
+int emptySubSlotC = 0;
+bool one_Started = false;
+const int Delta = 250;                 //Timeslot Length
+const int Delta_Proc = Delta/5;
+const int Real_Tx_Time = Delta/2;
+const int Tx_Time = Delta_Proc + Real_Tx_Time;
+const int Initial_Wait_Time = Delta*3;
+int Startup_Time = Initial_Wait_Time*2;
+int Transmitters = 0;
+clock startup;
+clock m;
+
+//Channel
+broadcast chan transmit;
+broadcast chan join;
+
+//Device Creation
+const int N = 3;
+typedef int[1,N] id_t;</declaration>
+	<template>
+		<name x="5" y="5">Device</name>
+		<parameter>const id_t id</parameter>
+		<declaration>// Place local declarations here.
+clock x;
+clock transmit_time;
+int k = 1;                     //Timeslot
+bool Connected = false;
+int Min_Units_For_Join = 0;
+bool bool_emptySubSlotA = false;
+bool bool_emptySubSlotB = false;
+bool bool_emptySubSlotC = false;
+
+
+// Local copies of globals
+int local_n = 2;                // Number of devices connected
+int local_i = 1;               // Current time slot in the frame
+
+void increment_Slot(){
+    local_i = (local_i % local_n)+1;
+}
+
+void receive()
+{
+    local_i = i;
+    local_n = n;
+}
+void attempt_Join_Network(){
+    if(bool_emptySubSlotA &amp;&amp; emptySubSlotA== 1){
+    i = local_i;
+    joining_ID = id;
+    }
+    if(bool_emptySubSlotB &amp;&amp; emptySubSlotB== 1){
+    i = local_i;
+    joining_ID = id;
+    }
+    if(bool_emptySubSlotC &amp;&amp; emptySubSlotC== 1){
+    i = local_i;
+    joining_ID = id;
+    }
+}
+
+void join_Network(){
+    k=n;
+    n = n+1;
+    i = local_i;
+    local_n = local_n+1;
+    Connected = true;
+    Connected_Counter++;
+    joining_ID = -1;
+}
+
+void calc_Min_Validate(){
+    Min_Units_For_Join = (local_n-1)/2;
+}
+
+void create_Network(){
+    i = 0;
+    n = 2;
+    k = 1;
+    local_i = 0;
+    local_n = 2;
+    Connected_Counter = 1;
+    Connected = true;
+    x:=0;
+    Transmitters++;
+}
+
+void make_Payload(){
+    i = local_i;
+    n = local_n;
+}
+
+void ResetJoins(){
+    emptySubSlotA = 0;
+    emptySubSlotB = 0;
+    emptySubSlotC = 0;
+    bool_emptySubSlotA = false;
+    bool_emptySubSlotB = false;
+    bool_emptySubSlotC = false;
+}
+
+
+
+
+</declaration>
+		<location id="id0" x="875" y="-178">
+			<label kind="invariant" x="900" y="-195">transmit_time&lt;=Real_Tx_Time</label>
+		</location>
+		<location id="id1" x="603" y="-178">
+			<label kind="invariant" x="612" y="-212">transmit_time&lt;=((Real_Tx_Time/3)*2)</label>
+		</location>
+		<location id="id2" x="374" y="-178">
+			<label kind="invariant" x="136" y="-187">transmit_time&lt;=(Real_Tx_Time/3)</label>
+		</location>
+		<location id="id3" x="246" y="-535">
+			<committed/>
+		</location>
+		<location id="id4" x="1011" y="459">
+			<label kind="invariant" x="1011" y="467">transmit_time&lt;=Real_Tx_Time</label>
+		</location>
+		<location id="id5" x="1011" y="348">
+			<committed/>
+		</location>
+		<location id="id6" x="824" y="204">
+			<label kind="invariant" x="798" y="170">x&lt;= Delta</label>
+		</location>
+		<location id="id7" x="1011" y="204">
+		</location>
+		<location id="id8" x="824" y="348">
+			<label kind="invariant" x="765" y="356">x&lt;=Delta_Proc</label>
+		</location>
+		<location id="id9" x="688" y="314">
+		</location>
+		<location id="id10" x="-187" y="620">
+			<committed/>
+		</location>
+		<location id="id11" x="909" y="-578">
+			<label kind="invariant" x="935" y="-586">x&lt;= Delta</label>
+		</location>
+		<location id="id12" x="526" y="-680">
+			<label kind="invariant" x="501" y="-714">x &lt;= Delta</label>
+		</location>
+		<location id="id13" x="25" y="-569">
+			<label kind="invariant" x="42" y="-586">x &lt;= Delta</label>
+		</location>
+		<location id="id14" x="646" y="484">
+			<label kind="invariant" x="620" y="450">x&lt;=Delta</label>
+		</location>
+		<location id="id15" x="94" y="484">
+			<label kind="invariant" x="68" y="450">x&lt;=Delta</label>
+		</location>
+		<location id="id16" x="374" y="484">
+			<name x="382" y="459">Main_Loop</name>
+			<committed/>
+		</location>
+		<location id="id17" x="646" y="748">
+			<name x="620" y="756">Receving</name>
+			<label kind="invariant" x="620" y="773">x &lt;= Delta</label>
+		</location>
+		<location id="id18" x="94" y="748">
+			<name x="51" y="756">Transmitting</name>
+			<label kind="invariant" x="-42" y="774">transmit_time&lt;=Real_Tx_Time</label>
+		</location>
+		<location id="id19" x="374" y="748">
+			<name x="348" y="765">Tx_Or_Rx</name>
+			<committed/>
+		</location>
+		<location id="id20" x="374" y="595">
+			<name x="280" y="595">User_Code</name>
+			<label kind="invariant" x="254" y="578">x &lt;= Delta_Proc</label>
+		</location>
+		<location id="id21" x="246" y="-680">
+			<name x="169" y="-714">User_Code_Not_Connected</name>
+			<label kind="invariant" x="194" y="-731">x &lt;= Delta_Proc</label>
+		</location>
+		<location id="id22" x="526" y="-536">
+			<name x="552" y="-553">Receiving_Not_Connected</name>
+		</location>
+		<location id="id23" x="238" y="323">
+			<label kind="invariant" x="161" y="323">x&lt;= Delta</label>
+		</location>
+		<location id="id24" x="68" y="-679">
+			<name x="25" y="-721">Network_Found</name>
+			<committed/>
+		</location>
+		<location id="id25" x="25" y="-356">
+			<name x="42" y="-390">Listen_For_Network</name>
+			<label kind="invariant" x="42" y="-373">x &lt;= Initial_Wait_Time</label>
+		</location>
+		<location id="id26" x="-144" y="-399">
+			<name x="-170" y="-433">Initialize</name>
+			<label kind="invariant" x="-221" y="-450">startup&lt;= Startup_Time</label>
+		</location>
+		<branchpoint id="id27" x="603" y="-399">
+		</branchpoint>
+		<init ref="id26"/>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-126" y="-411">startup == Startup_Time
+and one_Started == true</label>
+			<label kind="assignment" x="-126" y="-377">x:=0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id11"/>
+			<label kind="guard" x="1045" y="-382">emptySubSlotB == 1</label>
+			<label kind="synchronisation" x="1095" y="-395">transmit?</label>
+			<label kind="assignment" x="986" y="-476">bool_emptySubSlotB = false,
+x:=Tx_Time</label>
+			<nail x="679" y="-132"/>
+			<nail x="1155" y="-132"/>
+			<nail x="1155" y="-421"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id11"/>
+			<label kind="guard" x="918" y="-349">transmit_time &lt;= 
+((Real_Tx_Time/3)*2)</label>
+			<label kind="synchronisation" x="935" y="-408">transmit?</label>
+			<label kind="assignment" x="918" y="-289">bool_emptySubSlotC = false,
+x:=Tx_Time</label>
+			<nail x="926" y="-357"/>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="688" y="-391">bool_emptySubSlotC = true,
+emptySubSlotC++</label>
+			<label kind="probability" x="833" y="-374">1</label>
+			<nail x="875" y="-399"/>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="442" y="-280">bool_emptySubSlotB = true,
+emptySubSlotB++</label>
+			<label kind="probability" x="578" y="-306">1</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id22"/>
+			<label kind="guard" x="323" y="-569">local_i != local_n or
+joining_ID != -1</label>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id3"/>
+			<label kind="guard" x="246" y="-641">x==Delta_Proc</label>
+			<label kind="assignment" x="127" y="-578">increment_Slot()</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id23"/>
+			<label kind="guard" x="187" y="-127">bool_emptySubSlotA == true and
+transmit_time == (Real_Tx_Time/3)and
+Transmitters == 0</label>
+			<label kind="synchronisation" x="272" y="-51">transmit!</label>
+			<label kind="assignment" x="246" y="-34">attempt_Join_Network(),
+x:=Tx_Time</label>
+			<nail x="374" y="51"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id23"/>
+			<label kind="guard" x="467" y="-127">bool_emptySubSlotB == true and
+transmit_time == ((Real_Tx_Time/3)*2) and
+Transmitters == 0</label>
+			<label kind="synchronisation" x="484" y="-51">transmit!</label>
+			<label kind="assignment" x="484" y="-25">attempt_Join_Network(),
+x:=Tx_Time</label>
+			<nail x="603" y="26"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id23"/>
+			<label kind="guard" x="816" y="-119">bool_emptySubSlotC == true and
+transmit_time == Real_Tx_Time and
+Transmitters == 0</label>
+			<label kind="synchronisation" x="884" y="-34">transmit!</label>
+			<label kind="assignment" x="884" y="-17">attempt_Join_Network(),
+x:=Tx_Time</label>
+			<nail x="875" y="26"/>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="314" y="-382">bool_emptySubSlotA = true,
+emptySubSlotA++</label>
+			<label kind="probability" x="391" y="-340">1</label>
+			<nail x="374" y="-399"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id27"/>
+			<label kind="guard" x="620" y="-493">local_i == local_n
+and x == Delta_Proc 
+and joining_ID == -1</label>
+			<label kind="assignment" x="620" y="-442">transmit_time=0</label>
+			<nail x="475" y="-476"/>
+			<nail x="603" y="-476"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id26"/>
+			<label kind="guard" x="1003" y="68">local_i == local_n
+and join_Count &lt; Min_Units_For_Join</label>
+			<label kind="assignment" x="1156" y="221">joining_ID = -1</label>
+			<nail x="1181" y="348"/>
+			<nail x="1189" y="-748"/>
+			<nail x="16" y="-748"/>
+			<nail x="-69" y="-748"/>
+			<nail x="-170" y="-399"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id23"/>
+			<label kind="guard" x="748" y="416">Transmitters == 1 and
+transmit_time == Real_Tx_Time</label>
+			<label kind="synchronisation" x="748" y="459">transmit!</label>
+			<label kind="assignment" x="748" y="476">join_Network()</label>
+			<nail x="688" y="459"/>
+			<nail x="688" y="331"/>
+			<nail x="289" y="331"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="1003" y="357">local_i == local_n
+and join_Count &gt;= Min_Units_For_Join</label>
+			<label kind="assignment" x="1011" y="391">transmit_time:=0,
+Transmitters++,
+ResetJoins()</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id7"/>
+			<label kind="guard" x="1020" y="263">x == Delta_Proc 
+and local_i != local_n</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id5"/>
+			<label kind="guard" x="867" y="306">x==Delta_Proc</label>
+			<label kind="assignment" x="858" y="323">increment_Slot()</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="909" y="110">join?</label>
+			<label kind="assignment" x="901" y="136">receive(),
+x:=Tx_Time,
+join_Count++</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id8"/>
+			<label kind="guard" x="748" y="229">x==Delta</label>
+			<label kind="assignment" x="748" y="246">x:=0,
+calc_Min_Validate()</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="612" y="161">join?</label>
+			<label kind="assignment" x="595" y="178">receive(),
+join_Count++</label>
+			<nail x="688" y="204"/>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id9"/>
+			<label kind="guard" x="510" y="238">x==Delta and 
+Connected == false</label>
+			<label kind="assignment" x="510" y="272">x:=0</label>
+			<nail x="289" y="314"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-212" y="459">transmit!</label>
+			<nail x="-187" y="484"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-178" y="663">transmit_time==Real_Tx_Time
+and Transmitters == 1 
+and joining_ID != -1</label>
+			<label kind="synchronisation" x="-204" y="722">join!</label>
+			<label kind="assignment" x="-203" y="748">make_Payload()</label>
+			<nail x="-187" y="748"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id21"/>
+			<label kind="guard" x="850" y="-688">x==Delta</label>
+			<label kind="assignment" x="850" y="-722">x:=0</label>
+			<nail x="909" y="-722"/>
+			<nail x="382" y="-722"/>
+			<nail x="382" y="-697"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id15"/>
+			<label kind="guard" x="102" y="510">Transmitters &gt;= 2 and
+transmit_time == Real_Tx_Time</label>
+			<nail x="94" y="552"/>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id21"/>
+			<label kind="guard" x="416" y="-663">x==Delta</label>
+			<label kind="assignment" x="416" y="-680">x:=0</label>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="535" y="-637">transmit?</label>
+			<label kind="assignment" x="535" y="-620">receive(),
+x:=Tx_Time</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id24"/>
+			<label kind="guard" x="-51" y="-687">x == Delta</label>
+			<label kind="assignment" x="-25" y="-670">x:=0</label>
+			<nail x="25" y="-679"/>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-51" y="-535">transmit?</label>
+			<label kind="assignment" x="-59" y="-518">receive(),
+x:=Tx_Time</label>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-59" y="-272">x == Initial_Wait_Time</label>
+			<label kind="assignment" x="-17" y="-255">create_Network()</label>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id16"/>
+			<label kind="guard" x="518" y="442">x== Delta</label>
+			<label kind="assignment" x="518" y="459">x:=0</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="654" y="552">transmit?</label>
+			<label kind="assignment" x="654" y="569">receive(),
+x:=Tx_Time</label>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="guard" x="170" y="425">x == Delta</label>
+			<label kind="assignment" x="170" y="442">x:=0,
+Transmitters--</label>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-102" y="493">transmit_time 
+  == Real_Tx_Time
+and Transmitters == 1
+and joining_ID == -1</label>
+			<label kind="synchronisation" x="-25" y="569">transmit!</label>
+			<label kind="assignment" x="-76" y="586">make_Payload()</label>
+			<nail x="43" y="748"/>
+			<nail x="43" y="484"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id20"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="guard" x="510" y="578">x == Delta</label>
+			<label kind="assignment" x="510" y="595">x:= 0</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id16"/>
+			<label kind="guard" x="382" y="382">x==Delta and
+Connected == true</label>
+			<label kind="assignment" x="382" y="416">x:=0,
+Transmitters--</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id17"/>
+			<label kind="guard" x="476" y="748">local_i != k</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id18"/>
+			<label kind="guard" x="204" y="748">local_i == k</label>
+			<label kind="assignment" x="204" y="765">transmit_time:=0,
+Transmitters++</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id19"/>
+			<label kind="guard" x="272" y="646">x==Delta_Proc</label>
+			<label kind="assignment" x="263" y="663">increment_Slot()</label>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id21"/>
+			<nail x="169" y="-680"/>
+		</transition>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-144" y="-348">startup == Startup_Time and
+one_Started == false</label>
+			<label kind="assignment" x="-119" y="-339">startup:= 0,
+x:= 0,
+one_Started = true</label>
+			<nail x="-144" y="-356"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+// List one or more processes to be composed into a system.
+system Device;
+    </system>
+	<queries>
+		<query>
+			<formula>A&lt;&gt; forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and Device(i).k == Device(j).k imply i == j
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).User_Code and Device(j).User_Code imply Device(i).local_i == Device(j).local_i
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply Device(i).local_n == Device(j).local_n
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i : id_t) forall(j :id_t) Device(i).k != Device(j).local_n
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply Device(i).k &lt; n and Device(i).k &gt; 0
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[]  forall(i: id_t) Device(i).Connected imply Connected_Counter == n-1
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
