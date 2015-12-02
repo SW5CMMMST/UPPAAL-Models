@@ -18,7 +18,7 @@ const int Initial_Wait_Time = Delta*3;
 int Startup_Time = Initial_Wait_Time*2;
 int Transmitters = 0;
 clock startup;
-clock m;
+clock time;
 clock LastTransmission;
 
 //Random Backoff
@@ -849,25 +849,25 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply (Device(i).local_n == Device(j).local_n and Device(i).local_n &gt; 2 and Device(j).local_n &gt;2))
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t)  (time &gt; 3000) and (Device(i).Connected and Device(j).Connected imply (Device(i).local_n == Device(j).local_n and Device(i).local_n &gt; 2 and Device(j).local_n &gt;2)))
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j :id_t) Device(i).k != Device(j).local_n)
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j :id_t)  (time &gt;3000) and (Device(i).k != Device(j).local_n))
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) Device(i).Connected and Device(j).Connected imply Device(i).k &lt; Device(i).local_n and Device(i).k &gt; 0)
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t)  (time &gt;3000) and (Device(i).Connected and Device(j).Connected imply Device(i).k &lt; Device(i).local_n and Device(i).k &gt; 0))
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) Device(i).Connected imply Connected_Counter == ((Device(i).local_n) - 1))
+			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) (time &gt;3000) and (Device(i).Connected imply Connected_Counter == ((Device(i).local_n) - 1)))
 			</formula>
 			<comment>
 			</comment>
