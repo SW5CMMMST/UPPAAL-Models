@@ -19,6 +19,7 @@ int Startup_Time = Initial_Wait_Time*2;
 int Transmitters = 0;
 clock startup;
 clock m;
+clock LastTransmission;
 
 //Random Backoff
 typedef int[0,1]  firstBackoff;
@@ -136,11 +137,11 @@ void ResetJoins(){
 		</location>
 		<location id="id1" x="-578" y="-714">
 			<name x="-588" y="-748">q</name>
-			<label kind="invariant" x="-697" y="-748">x &lt;= Delta*local_n</label>
+			<label kind="invariant" x="-714" y="-748">x &lt;= Delta*local_n</label>
 		</location>
 		<location id="id2" x="306" y="348">
 			<name x="296" y="314">g</name>
-			<label kind="invariant" x="323" y="365">x&lt;=Delta</label>
+			<label kind="invariant" x="289" y="365">x&lt;=Delta</label>
 		</location>
 		<location id="id3" x="892" y="-93">
 			<name x="882" y="-127">F</name>
@@ -202,7 +203,7 @@ void ResetJoins(){
 		</location>
 		<location id="id18" x="-229" y="654">
 			<name x="-239" y="620">o</name>
-			<label kind="invariant" x="-255" y="620">x&lt;=Delta</label>
+			<label kind="invariant" x="-255" y="612">x&lt;=Delta</label>
 		</location>
 		<location id="id19" x="51" y="654">
 			<name x="59" y="629">Main_Loop</name>
@@ -250,6 +251,21 @@ void ResetJoins(){
 		<branchpoint id="id30" x="586" y="-561">
 		</branchpoint>
 		<init ref="id29"/>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id2"/>
+			<label kind="guard" x="850" y="612">Transmitters &gt; 1 and
+transmit_time == Real_Tx_Time</label>
+			<label kind="assignment" x="867" y="654">k=local_n
+ResetJoins(),
+local_n++,
+Connected=true,
+Connected_Counter++,
+joining_ID = -1</label>
+			<nail x="951" y="654"/>
+			<nail x="475" y="654"/>
+			<nail x="475" y="263"/>
+		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
@@ -320,9 +336,9 @@ Connected_Counter--</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id0"/>
-			<label kind="guard" x="-595" y="-229">x==Delta and
+			<label kind="guard" x="-595" y="-238">x==Delta and
 StartLoopCount &lt;= id^StartAttempts</label>
-			<label kind="assignment" x="-493" y="-187">StartLoopCount++,
+			<label kind="assignment" x="-493" y="-195">StartLoopCount++,
 x:=0</label>
 			<nail x="-365" y="-246"/>
 			<nail x="-365" y="-144"/>
@@ -531,7 +547,7 @@ Connected == true</label>
 			<label kind="assignment" x="68" y="425">x:=0,
 Transmitters--,
 FrameCount = 0</label>
-			<nail x="306" y="374"/>
+			<nail x="280" y="374"/>
 			<nail x="51" y="374"/>
 		</transition>
 		<transition>
@@ -542,8 +558,8 @@ transmit_time == Real_Tx_Time</label>
 			<label kind="synchronisation" x="774" y="832">transmit!</label>
 			<label kind="assignment" x="859" y="824">join_Network(),
 ResetJoins()</label>
-			<nail x="493" y="773"/>
-			<nail x="493" y="365"/>
+			<nail x="450" y="773"/>
+			<nail x="450" y="399"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
@@ -762,8 +778,8 @@ FrameCount=0</label>
 		<transition>
 			<source ref="id18"/>
 			<target ref="id19"/>
-			<label kind="guard" x="-153" y="577">x == Delta</label>
-			<label kind="assignment" x="-153" y="594">x:=0,
+			<label kind="guard" x="-178" y="561">x == Delta</label>
+			<label kind="assignment" x="-178" y="578">x:=0,
 Transmitters--,
 FrameCount++</label>
 		</transition>
