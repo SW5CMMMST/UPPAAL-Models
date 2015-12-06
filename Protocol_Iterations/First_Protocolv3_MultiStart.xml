@@ -164,9 +164,9 @@ Real_Tx_Time</label>
 			<name x="1173" y="59">AA</name>
 			<label kind="invariant" x="1198" y="67">x&lt;=Delta</label>
 		</location>
-		<location id="id11" x="850" y="510">
-			<name x="840" y="476">j</name>
-			<label kind="invariant" x="790" y="518">x&lt;=Delta_Proc</label>
+		<location id="id11" x="833" y="510">
+			<name x="823" y="476">j</name>
+			<label kind="invariant" x="773" y="518">x&lt;=Delta_Proc</label>
 		</location>
 		<location id="id12" x="450" y="221">
 			<name x="440" y="187">h</name>
@@ -403,7 +403,7 @@ WaitLoopCount++</label>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id15"/>
-			<label kind="synchronisation" x="119" y="-399">transmit?</label>
+			<label kind="synchronisation" x="-51" y="-323">transmit?</label>
 			<label kind="assignment" x="-68" y="-306">receive(),
 x=Tx_Time</label>
 		</transition>
@@ -434,11 +434,11 @@ StartLoopCount &gt;= backoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="2014" y="153">randomBackoff : int[0,15]</label>
+			<label kind="select" x="1972" y="136">randomBackoff : int[0,15]</label>
 			<label kind="guard" x="1887" y="204">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 3</label>
-			<label kind="assignment" x="2014" y="178">FailCount++,
+			<label kind="assignment" x="1963" y="153">FailCount++,
 x:=0,
 backoff = randomBackoff</label>
 			<nail x="2142" y="510"/>
@@ -447,11 +447,11 @@ backoff = randomBackoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1751" y="255">randomBackoff : int[0,7]</label>
+			<label kind="select" x="1717" y="229">randomBackoff : int[0,7]</label>
 			<label kind="guard" x="1623" y="297">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 2</label>
-			<label kind="assignment" x="1751" y="280">FailCount++,
+			<label kind="assignment" x="1708" y="246">FailCount++,
 x:=0,
 backoff = randomBackoff</label>
 			<nail x="1870" y="510"/>
@@ -460,11 +460,11 @@ backoff = randomBackoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1487" y="357">randomBackoff : int[0,3]</label>
+			<label kind="select" x="1462" y="323">randomBackoff : int[0,3]</label>
 			<label kind="guard" x="1360" y="391">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 1</label>
-			<label kind="assignment" x="1487" y="374">FailCount++,
+			<label kind="assignment" x="1445" y="340">FailCount++,
 x:=0,
 backoff = randomBackoff</label>
 			<nail x="1615" y="510"/>
@@ -473,11 +473,11 @@ backoff = randomBackoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="2295" y="85">randomBackoff : int[0,31]</label>
+			<label kind="select" x="2244" y="34">randomBackoff : int[0,31]</label>
 			<label kind="guard" x="2167" y="85">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 4</label>
-			<label kind="assignment" x="2295" y="68">x:=0,
+			<label kind="assignment" x="2235" y="51">x:=0,
 backoff = randomBackoff</label>
 			<nail x="2439" y="510"/>
 			<nail x="2448" y="-297"/>
@@ -493,11 +493,11 @@ backoff = randomBackoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1173" y="-272">randomBackoff : int[0,1]</label>
+			<label kind="select" x="1164" y="-280">randomBackoff : int[0,1]</label>
 			<label kind="guard" x="1079" y="-204">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 0</label>
-			<label kind="assignment" x="1190" y="-246">FailCount++,
+			<label kind="assignment" x="1156" y="-263">FailCount++,
 x:=0,
 backoff = randomBackoff</label>
 			<nail x="1326" y="510"/>
@@ -532,7 +532,8 @@ x:=Tx_Time</label>
 			<label kind="assignment" x="578" y="297">receive(),
 x:=Tx_Time</label>
 			<nail x="450" y="340"/>
-			<nail x="816" y="340"/>
+			<nail x="807" y="340"/>
+			<nail x="807" y="136"/>
 		</transition>
 		<transition>
 			<source ref="id10"/>
@@ -615,8 +616,8 @@ and local_i != local_n</label>
 			<source ref="id10"/>
 			<target ref="id9"/>
 			<label kind="guard" x="850" y="-85">joining_ID == id</label>
-			<label kind="synchronisation" x="1079" y="-85">join?</label>
-			<label kind="assignment" x="977" y="-127">receive(),
+			<label kind="synchronisation" x="1045" y="-85">join?</label>
+			<label kind="assignment" x="952" y="-119">receive(),
 x:=Tx_Time,
 join_Count++</label>
 			<nail x="1173" y="-59"/>
@@ -628,6 +629,7 @@ join_Count++</label>
 			<label kind="guard" x="850" y="374">x==Delta</label>
 			<label kind="assignment" x="850" y="391">x:=0,
 calc_Min_Validate()</label>
+			<nail x="833" y="136"/>
 		</transition>
 		<transition>
 			<source ref="id12"/>
