@@ -50,11 +50,12 @@ bool bool_emptySubSlotA = false;
 bool bool_emptySubSlotB = false;
 bool bool_emptySubSlotC = false;
 int WaitLoopCount = 0;
-int backoff;
+int backoff = 0;
 int FailCount = 0;
 int StartLoopCount = 0;
 int StartAttempts = 0;
 int FrameCount = 0;
+int randomBackoff;
 
 
 
@@ -233,6 +234,16 @@ Real_Tx_Time</label>
 		</branchpoint>
 		<init ref="id27"/>
 		<transition>
+			<source ref="id4"/>
+			<target ref="id26"/>
+			<label kind="guard" x="348" y="-535">WaitLoopCount &gt; backoff and
+x == Delta*local_n</label>
+			<label kind="assignment" x="425" y="-493">x:=0,
+WaitLoopCount = 0</label>
+			<nail x="561" y="-552"/>
+			<nail x="-314" y="-552"/>
+		</transition>
+		<transition>
 			<source ref="id19"/>
 			<target ref="id18"/>
 			<label kind="guard" x="25" y="646">x == Delta
@@ -242,8 +253,9 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-1055" y="1189">backoff : int[0,31]</label>
+			<label kind="select" x="-1055" y="1189">randomBackoff : int[0,31]</label>
 			<label kind="guard" x="-1063" y="1206">StartAttempts &gt;= 5</label>
+			<label kind="assignment" x="-901" y="1207">backoff = randomBackoff</label>
 			<nail x="348" y="1232"/>
 			<nail x="-1080" y="1231"/>
 			<nail x="-1080" y="-485"/>
@@ -251,8 +263,9 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-1012" y="1138">backoff : int[0,15]</label>
+			<label kind="select" x="-1012" y="1138">randomBackoff : int[0,15]</label>
 			<label kind="guard" x="-1021" y="1155">StartAttempts == 4</label>
+			<label kind="assignment" x="-875" y="1156">backoff = randomBackoff</label>
 			<nail x="348" y="1181"/>
 			<nail x="-1038" y="1180"/>
 			<nail x="-1038" y="-485"/>
@@ -260,8 +273,9 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-978" y="1095">backoff : int[0,7]</label>
+			<label kind="select" x="-978" y="1095">randomBackoff : int[0,7]</label>
 			<label kind="guard" x="-978" y="1112">StartAttempts == 3</label>
+			<label kind="assignment" x="-833" y="1122">backoff = randomBackoff</label>
 			<nail x="348" y="1138"/>
 			<nail x="-995" y="1138"/>
 			<nail x="-995" y="-485"/>
@@ -269,8 +283,9 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-902" y="1044">backoff : int[0,3]</label>
+			<label kind="select" x="-902" y="1044">randomBackoff : int[0,3]</label>
 			<label kind="guard" x="-919" y="1061">StartAttempts == 2</label>
+			<label kind="assignment" x="-782" y="1062">backoff = randomBackoff</label>
 			<nail x="348" y="1087"/>
 			<nail x="-944" y="1087"/>
 			<nail x="-944" y="-485"/>
@@ -278,8 +293,9 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-858" y="994">backoff : int[0,1]</label>
+			<label kind="select" x="-858" y="994">randomBackoff : int[0,1]</label>
 			<label kind="guard" x="-867" y="1011">StartAttempts == 1</label>
+			<label kind="assignment" x="-748" y="1028">backoff = randomBackoff</label>
 			<nail x="-884" y="1045"/>
 			<nail x="-885" y="-485"/>
 		</transition>
@@ -418,47 +434,51 @@ StartLoopCount &gt;= backoff</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="2014" y="153">backoff : int[0,15]</label>
+			<label kind="select" x="2014" y="153">randomBackoff : int[0,15]</label>
 			<label kind="guard" x="1887" y="204">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 3</label>
 			<label kind="assignment" x="2014" y="178">FailCount++,
-x:=0</label>
+x:=0,
+backoff = randomBackoff</label>
 			<nail x="2142" y="510"/>
 			<nail x="2142" y="-297"/>
 		</transition>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1751" y="255">backoff : int[0,7]</label>
+			<label kind="select" x="1751" y="255">randomBackoff : int[0,7]</label>
 			<label kind="guard" x="1623" y="297">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 2</label>
 			<label kind="assignment" x="1751" y="280">FailCount++,
-x:=0</label>
+x:=0,
+backoff = randomBackoff</label>
 			<nail x="1870" y="510"/>
 			<nail x="1870" y="-297"/>
 		</transition>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1487" y="357">backoff : int[0,3]</label>
+			<label kind="select" x="1487" y="357">randomBackoff : int[0,3]</label>
 			<label kind="guard" x="1360" y="391">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 1</label>
 			<label kind="assignment" x="1487" y="374">FailCount++,
-x:=0</label>
+x:=0,
+backoff = randomBackoff</label>
 			<nail x="1615" y="510"/>
 			<nail x="1615" y="-297"/>
 		</transition>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="2295" y="85">backoff : int[0,31]</label>
+			<label kind="select" x="2295" y="85">randomBackoff : int[0,31]</label>
 			<label kind="guard" x="2167" y="85">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 4</label>
-			<label kind="assignment" x="2295" y="68">x:=0</label>
+			<label kind="assignment" x="2295" y="68">x:=0,
+backoff = randomBackoff</label>
 			<nail x="2439" y="510"/>
 			<nail x="2448" y="-297"/>
 		</transition>
@@ -473,12 +493,13 @@ and FailCount == 4</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id4"/>
-			<label kind="select" x="1215" y="-238">backoff : int[0,1]</label>
+			<label kind="select" x="1173" y="-272">randomBackoff : int[0,1]</label>
 			<label kind="guard" x="1079" y="-204">local_i == local_n
 and join_Count &lt; Min_Units_For_Join
 and FailCount == 0</label>
-			<label kind="assignment" x="1207" y="-221">FailCount++,
-x:=0</label>
+			<label kind="assignment" x="1190" y="-246">FailCount++,
+x:=0,
+backoff = randomBackoff</label>
 			<nail x="1326" y="510"/>
 			<nail x="1326" y="-297"/>
 		</transition>
@@ -492,16 +513,6 @@ joining_ID != id</label>
 WaitLoopCount++</label>
 			<nail x="654" y="-289"/>
 			<nail x="680" y="-238"/>
-		</transition>
-		<transition>
-			<source ref="id4"/>
-			<target ref="id26"/>
-			<label kind="guard" x="238" y="-620">WaitLoopCount &gt; backoff and
-x == Delta*local_n</label>
-			<label kind="assignment" x="238" y="-586">x:=0,
-WaitLoopCount = 0</label>
-			<nail x="603" y="-544"/>
-			<nail x="-314" y="-544"/>
 		</transition>
 		<transition>
 			<source ref="id10"/>
@@ -571,7 +582,7 @@ Transmitters--</label>
 		<transition>
 			<source ref="id6"/>
 			<target ref="id24"/>
-			<label kind="guard" x="187" y="-60">local_i != local_n or
+			<label kind="guard" x="161" y="-59">local_i != local_n or
 joining_ID != -1</label>
 		</transition>
 		<transition>
@@ -647,7 +658,7 @@ and joining_ID != -1</label>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-544" y="586">Transmitters &gt;= 2 and
+			<label kind="guard" x="-527" y="637">Transmitters &gt;= 2 and
 transmit_time 
 == Real_Tx_Time</label>
 			<nail x="-382" y="603"/>
@@ -772,7 +783,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) (time &gt;3000) and (Device(i).Connected imply Connected_Counter == ((Device(i).local_n) - 1)))
+			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) (time &gt;3000) and  Device(i).local_n == N+1)
 			</formula>
 			<comment>
 			</comment>
