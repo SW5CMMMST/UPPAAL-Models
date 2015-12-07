@@ -19,7 +19,7 @@ clock m;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 2;
+const int N = 5;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -137,7 +137,7 @@ void make_Payload(){
 			<name x="-153" y="178">Initialize</name>
 			<label kind="invariant" x="-204" y="161">startup&lt;= Startup_Time</label>
 		</location>
-		<init ref="id16"/>
+		<init ref="id15"/>
 		<transition>
 			<source ref="id12"/>
 			<target ref="id11"/>
