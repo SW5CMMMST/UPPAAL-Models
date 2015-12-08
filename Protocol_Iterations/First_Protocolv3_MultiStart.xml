@@ -34,7 +34,7 @@ broadcast chan transmit;
 broadcast chan join;
 
 //Device Creation
-const int N = 5;
+const int N = 6;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -56,6 +56,7 @@ int StartLoopCount = 0;
 int StartAttempts = 0;
 int FrameCount = 0;
 int randomBackoff;
+int kill_chance = 10;
 
 
 
@@ -123,7 +124,7 @@ void ResetJoins(){
 
 </declaration>
 		<location id="id0" x="348" y="1045">
-			<name x="357" y="1019">Kill</name>
+			<name x="365" y="1037">Kill_The_Network</name>
 			<committed/>
 		</location>
 		<location id="id1" x="-85" y="127">
@@ -184,12 +185,12 @@ Real_Tx_Time</label>
 			<label kind="invariant" x="127" y="-501">x &lt;= Delta</label>
 		</location>
 		<location id="id16" x="187" y="535">
-			<name x="177" y="501">n</name>
+			<name x="177" y="501">Just_Received</name>
 			<label kind="invariant" x="204" y="527">x&lt;=Delta</label>
 		</location>
 		<location id="id17" x="-382" y="535">
-			<name x="-374" y="510">o</name>
-			<label kind="invariant" x="-408" y="493">x&lt;=Delta</label>
+			<name x="-476" y="501">Done_Transmitting</name>
+			<label kind="invariant" x="-408" y="484">x&lt;=Delta</label>
 		</location>
 		<location id="id18" x="-85" y="535">
 			<name x="-59" y="510">Main_Loop</name>
@@ -305,7 +306,7 @@ and local_n &gt; 2</label>
 			<label kind="assignment" x="357" y="952">Connected = false,
 Connected_Counter--,
 StartAttempts++</label>
-			<label kind="probability" x="357" y="926">10</label>
+			<label kind="probability" x="357" y="926">kill_chance</label>
 		</transition>
 		<transition>
 			<source ref="id28"/>
@@ -785,7 +786,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) (time &gt;3000) and  Device(i).local_n == N+1)
+			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) forall(j: id_t)(time &gt;3000) and  (Device(i).local_n == N+1) and Device(i).Done_Transmitting imply (Device(j).Just_Received or i==j))
 			</formula>
 			<comment>
 			</comment>
