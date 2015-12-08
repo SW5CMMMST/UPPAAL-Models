@@ -6,6 +6,7 @@ int n = 0;                             // Number of Timeslots connected
 int i = 0;                             // Current time slot in the frame
 int joining_ID = -1;                   // The ID of the device joining       
 int Connected_Counter = 0;             //Global Counter for Connected Devices
+int Network_id = 0;
 int emptySubSlotA = 0;
 int emptySubSlotB = 0;
 int emptySubSlotC = 0;
@@ -46,9 +47,6 @@ int k = -1;                     //Timeslot
 bool Connected = false;
 int join_Count = 0;      
 int Min_Units_For_Join = 0;
-bool bool_emptySubSlotA = false;
-bool bool_emptySubSlotB = false;
-bool bool_emptySubSlotC = false;
 int WaitLoopCount = 0;
 int backoff = 0;
 int FailCount = 0;
@@ -58,11 +56,10 @@ int FrameCount = 0;
 int randomBackoff;
 int kill_chance = 10;
 
-
-
 // Local copies of globals
 int local_n = 0;                // Number of devices connected
 int local_i = 0;               // Current time slot in the frame
+int local_network_id = 0;
 
 void increment_Slot(){
     local_i = (local_i % local_n)+1;
@@ -72,6 +69,7 @@ void receive()
 {
     local_i = i;
     local_n = n;
+    local_network_id = Network_id;
 }
 void attempt_Join_Network(){
     i = local_i;
@@ -105,23 +103,14 @@ void create_Network(){
     x:=0;
     Transmitters++;
     Connected_Counter++;
+    local_network_id = id;
 }
 
 void make_Payload(){
     i = local_i;
     n = local_n;
+    Network_id = local_network_id;
 }
-
-void ResetJoins(){
-    emptySubSlotA = 0;
-    emptySubSlotB = 0;
-    emptySubSlotC = 0;
-    bool_emptySubSlotA = false;
-    bool_emptySubSlotB = false;
-    bool_emptySubSlotC = false;
-}
-
-
 </declaration>
 		<location id="id0" x="348" y="1045">
 			<name x="365" y="1037">Kill_The_Network</name>
@@ -231,9 +220,25 @@ Real_Tx_Time</label>
 			<name x="-441" y="-603">Initialize</name>
 			<label kind="invariant" x="-560" y="-586">startup&lt;= Startup_Time</label>
 		</location>
-		<branchpoint id="id28" x="348" y="918">
+		<location id="id28" x="459" y="569">
+			<name x="467" y="586">TimeLockAvoidance</name>
+			<committed/>
+		</location>
+		<branchpoint id="id29" x="348" y="918">
 		</branchpoint>
 		<init ref="id27"/>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id5"/>
+			<nail x="399" y="340"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id28"/>
+			<label kind="guard" x="501" y="518">Transmitters &gt; 1 and
+transmit_time == Real_Tx_Time</label>
+			<nail x="986" y="569"/>
+		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id26"/>
@@ -301,7 +306,7 @@ and local_n &gt; 2</label>
 			<nail x="-885" y="-485"/>
 		</transition>
 		<transition>
-			<source ref="id28"/>
+			<source ref="id29"/>
 			<target ref="id0"/>
 			<label kind="assignment" x="357" y="952">Connected = false,
 Connected_Counter--,
@@ -309,15 +314,15 @@ StartAttempts++</label>
 			<label kind="probability" x="357" y="926">kill_chance</label>
 		</transition>
 		<transition>
-			<source ref="id28"/>
+			<source ref="id29"/>
 			<target ref="id18"/>
-			<label kind="probability" x="357" y="884">90</label>
+			<label kind="probability" x="357" y="884">100 - kill_chance</label>
 			<nail x="348" y="485"/>
 			<nail x="-34" y="485"/>
 		</transition>
 		<transition>
 			<source ref="id19"/>
-			<target ref="id28"/>
+			<target ref="id29"/>
 			<label kind="guard" x="229" y="859">x==Delta
 and local_n == 2</label>
 			<label kind="assignment" x="229" y="893">x:=0</label>
@@ -359,21 +364,6 @@ Transmitters++</label>
 and Transmitters &gt; 0</label>
 			<label kind="assignment" x="-297" y="816">transmit_time:=0,
 Transmitters++</label>
-		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id5"/>
-			<label kind="guard" x="629" y="595">Transmitters &gt; 1 and
-transmit_time == Real_Tx_Time</label>
-			<label kind="assignment" x="467" y="518">k=local_n,
-ResetJoins(),
-local_n++,
-Connected=true,
-Connected_Counter++,
-joining_ID = -1</label>
-			<nail x="1011" y="637"/>
-			<nail x="399" y="637"/>
-			<nail x="399" y="340"/>
 		</transition>
 		<transition>
 			<source ref="id4"/>
@@ -565,13 +555,13 @@ FrameCount = 0</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id5"/>
-			<label kind="guard" x="705" y="688">Transmitters == 1 and
+			<label kind="guard" x="714" y="688">Transmitters == 1 and
 transmit_time == Real_Tx_Time</label>
 			<label kind="synchronisation" x="646" y="705">transmit!</label>
-			<label kind="assignment" x="552" y="688">join_Network(),
-ResetJoins()</label>
+			<label kind="assignment" x="544" y="705">join_Network()</label>
 			<nail x="399" y="731"/>
 			<nail x="399" y="340"/>
+			<nail x="161" y="340"/>
 		</transition>
 		<transition>
 			<source ref="id5"/>
@@ -580,6 +570,7 @@ ResetJoins()</label>
 Connected == false</label>
 			<label kind="assignment" x="280" y="195">x:=0,
 Transmitters--</label>
+			<nail x="-76" y="331"/>
 		</transition>
 		<transition>
 			<source ref="id6"/>
@@ -774,7 +765,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).k != Device(j).local_n))
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).k &lt; Device(j).local_n))
 			</formula>
 			<comment>
 			</comment>
@@ -788,6 +779,10 @@ system Device;
 		<query>
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).local_n == N+1))</formula>
 			<comment></comment>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) not Device(i).TimeLockAvoidance)</formula>
+			<comment>This query tests if the edge we use to prevent the timelock is ever taken. </comment>
 		</query>
 		<query>
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).local_n == N+1) and (Device(i).Done_Transmitting imply (Device(j).Just_Received or i == j)))</formula>
