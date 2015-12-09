@@ -771,8 +771,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).Connected and Device(j).Connected imply Device(i).k &lt; Device(i).local_n and Device(i).k &gt; 0))
-			</formula>
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).Connected and Device(j).Connected imply (Device(i).k &lt; Device(j).local_n and Device(i).k &gt; 0) and Device(i).local_network_id == Device(j).local_network_id))</formula>
 			<comment>
 			</comment>
 		</query>
@@ -783,6 +782,11 @@ system Device;
 		<query>
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) not Device(i).TimeLockAvoidance)</formula>
 			<comment>This query tests if the edge we use to prevent the timelock is ever taken. </comment>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).Connected and Device(j).Connected imply ((Device(i).local_n == Device(j).local_n) and Device(i).local_network_id == Device(j).local_network_id)))
+</formula>
+			<comment></comment>
 		</query>
 		<query>
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000) and (Device(i).local_n == N+1) and (Device(i).Done_Transmitting imply (Device(j).Just_Received or i == j)))</formula>
