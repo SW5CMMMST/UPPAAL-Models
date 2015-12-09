@@ -19,7 +19,7 @@ clock m;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 5;
+const int N = 6;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -133,8 +133,9 @@ void make_Payload(){
 			<name x="59" y="221">Listen_For_Network</name>
 			<label kind="invariant" x="59" y="238">x &lt;= Initial_Wait_Time</label>
 		</location>
-		<location id="id16" x="-127" y="212">
-			<name x="-153" y="178">Initialize</name>
+		<location id="id16" x="-136" y="212">
+			<name x="-162" y="178">Initialize</name>
+			<label kind="invariant" x="-119" y="204">startup &lt;= Startup_Time</label>
 		</location>
 		<init ref="id16"/>
 		<transition>
@@ -272,10 +273,10 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id16"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-170" y="255">startup &gt;= Startup_Time</label>
-			<label kind="assignment" x="-102" y="272">startup:= 0,
-x:= 0</label>
-			<nail x="-127" y="255"/>
+			<label kind="guard" x="-136" y="255">startup &gt;= Startup_Time</label>
+			<label kind="assignment" x="-136" y="272">x:= 0,
+startup = 0</label>
+			<nail x="-136" y="255"/>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
@@ -284,7 +285,7 @@ system Device;
     </system>
 	<queries>
 		<query>
-			<formula>A&lt;&gt; forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and Device(i).k == Device(j).k imply i == j
+			<formula>A&lt;&gt; forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and (Device(i).k == Device(j).k imply i == j)
 			</formula>
 			<comment>
 			</comment>
