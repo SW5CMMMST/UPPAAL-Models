@@ -135,9 +135,8 @@ void make_Payload(){
 		</location>
 		<location id="id16" x="-127" y="212">
 			<name x="-153" y="178">Initialize</name>
-			<label kind="invariant" x="-204" y="161">startup&lt;= Startup_Time</label>
 		</location>
-		<init ref="id15"/>
+		<init ref="id16"/>
 		<transition>
 			<source ref="id12"/>
 			<target ref="id11"/>
@@ -273,7 +272,7 @@ x:=Tx_Time</label>
 		<transition>
 			<source ref="id16"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-195" y="255">startup == Startup_Time</label>
+			<label kind="guard" x="-170" y="255">startup &gt;= Startup_Time</label>
 			<label kind="assignment" x="-102" y="272">startup:= 0,
 x:= 0</label>
 			<nail x="-127" y="255"/>
