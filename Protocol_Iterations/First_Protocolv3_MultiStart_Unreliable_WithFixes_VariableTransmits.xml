@@ -6,21 +6,29 @@ int n = 0;                             // Number of Timeslots connected
 int i = 0;                             // Current time slot in the frame
 int joining_ID = -1;                   // The ID of the device joining       
 int Connected_Counter = 0;             //Global Counter for Connected Devices
-int global_transmissionNumber = 1;
-const int Number_Of_Transmits_Pr_Slot = 4;
-int network_id;
+int global_transmissionNumber = 1;     // Indicating the number of transmission being sent
+int network_id;                        // id of the network being transmitted from
 
-bool one_Started = false;
-const int Delta = 250;                 //Timeslot Length
+//States how reliable the  network is
+const int Number_Of_Transmits_Pr_Slot = 4;
+const int receiveChance = 92;
+const int missChance = 100 - receiveChance;
+
+//Chance of killing the network when alone
+const int StayAliveChance = 90;
+const int KillChance = 100 - StayAliveChance;
+
+//Time values
+const int Real_Tx_Time = 150;                                                        //Transmit time for one transmit
+const int Delta = 250 + (Real_Tx_Time*Number_Of_Transmits_Pr_Slot);                 //Timeslot Length
 const int Delta_Proc = Delta/10;
-const int Real_Tx_Time = ((Delta/2)/Number_Of_Transmits_Pr_Slot);
-const int Tx_Time = Delta_Proc + Real_Tx_Time;
 const int Initial_Wait_Time = Delta*3;
 int Startup_Time = Initial_Wait_Time*2;
-int Transmitters = 0;
 clock startup;
 clock time;
-clock LastTransmission;
+
+//Number of current transmitters transmitting
+int Transmitters = 0;
 
 //Random Backoff
 typedef int[0,1]  firstBackoff;
@@ -47,9 +55,6 @@ int k = -1;                     //Timeslot
 bool Connected = false;
 int join_Count = 0;      
 int Min_Units_For_Join = 0;
-bool bool_emptySubSlotA = false;
-bool bool_emptySubSlotB = false;
-bool bool_emptySubSlotC = false;
 int WaitLoopCount = 0;
 int backoff = 0;
 int FailCount = 0;
@@ -59,8 +64,6 @@ int FrameCount = 0;
 int randomBackoff;
 int local_network_id= -1;
 int transmissionNumber = 1;
-
-
 
 // Local copies of globals
 int local_n = 0;                // Number of devices connected
@@ -75,7 +78,7 @@ void receive()
     local_i = i;
     local_n = n;
     local_network_id = network_id;
-    x:=Tx_Time+(Real_Tx_Time*(global_transmissionNumber-1));
+    x:=Delta_Proc+(Real_Tx_Time*global_transmissionNumber);
 }
 
 void attempt_Join_Network(){
@@ -130,40 +133,35 @@ void ClearJoiningID(){
 
 
 </declaration>
-		<location id="id0" x="348" y="1045">
-			<name x="357" y="1019">Kill</name>
+		<location id="id0" x="348" y="1300">
+			<name x="357" y="1274">Kill</name>
 			<committed/>
 		</location>
-		<location id="id1" x="-85" y="93">
-			<name x="-95" y="59">MM</name>
-			<label kind="invariant" x="-42" y="68">transmit_time&lt;=Real_Tx_Time</label>
+		<location id="id1" x="-170" y="-17">
+			<label kind="invariant" x="-127" y="-42">transmit_time&lt;=Real_Tx_Time</label>
 		</location>
-		<location id="id2" x="-246" y="714">
-			<name x="-256" y="680">WAAAt</name>
-			<label kind="invariant" x="-348" y="731">transmit_time&lt;=Number_Of_Transmits_Pr_Slot*Real_Tx_Time</label>
+		<location id="id2" x="-280" y="765">
+			<label kind="invariant" x="-289" y="697">transmit_time&lt;=
+Number_Of_Transmits_Pr_Slot
+*Real_Tx_Time</label>
 		</location>
-		<location id="id3" x="-340" y="-25">
-			<name x="-340" y="-59">p</name>
-			<label kind="invariant" x="-323" y="-42">x&lt;=Delta</label>
+		<location id="id3" x="-620" y="-212">
+			<label kind="invariant" x="-612" y="-212">x&lt;=Delta</label>
 		</location>
 		<location id="id4" x="739" y="-297">
 			<name x="729" y="-331">q</name>
 			<label kind="invariant" x="603" y="-323">x &lt;= Delta*local_n</label>
 		</location>
 		<location id="id5" x="-85" y="340">
-			<name x="-111" y="306">g</name>
 			<label kind="invariant" x="-76" y="348">x&lt;=Delta</label>
 		</location>
 		<location id="id6" x="110" y="-17">
-			<name x="100" y="-51">P</name>
 			<committed/>
 		</location>
 		<location id="id7" x="1173" y="697">
-			<name x="1156" y="663">m</name>
 			<label kind="invariant" x="1190" y="688">transmit_time&lt;=Real_Tx_Time</label>
 		</location>
 		<location id="id8" x="1173" y="510">
-			<name x="1163" y="476">l</name>
 			<committed/>
 		</location>
 		<location id="id9" x="816" y="93">
@@ -171,51 +169,45 @@ void ClearJoiningID(){
 			<label kind="invariant" x="739" y="68">x&lt;= Delta</label>
 		</location>
 		<location id="id10" x="1173" y="93">
-			<name x="1173" y="59">AA</name>
 			<label kind="invariant" x="1198" y="76">x&lt;=Delta</label>
 		</location>
 		<location id="id11" x="833" y="510">
-			<name x="823" y="476">j</name>
 			<label kind="invariant" x="773" y="518">x&lt;=Delta_Proc</label>
 		</location>
 		<location id="id12" x="450" y="221">
-			<name x="440" y="187">h</name>
 			<label kind="invariant" x="374" y="230">x &lt;= Delta</label>
 		</location>
-		<location id="id13" x="-841" y="807">
-			<name x="-851" y="773">C</name>
+		<location id="id13" x="-867" y="935">
 			<committed/>
 		</location>
 		<location id="id14" x="390" y="-162">
-			<name x="380" y="-196">A</name>
 			<label kind="invariant" x="408" y="-178">x &lt;= Delta</label>
 		</location>
 		<location id="id15" x="110" y="-484">
-			<name x="100" y="-518">r</name>
 			<label kind="invariant" x="127" y="-501">x &lt;= Delta</label>
 		</location>
 		<location id="id16" x="187" y="535">
-			<name x="177" y="501">n</name>
+			<name x="153" y="493">Just_Received</name>
 			<label kind="invariant" x="204" y="510">x&lt;=Delta</label>
 		</location>
-		<location id="id17" x="-382" y="535">
-			<name x="-374" y="510">o</name>
-			<label kind="invariant" x="-408" y="493">x&lt;=Delta</label>
+		<location id="id17" x="-467" y="535">
+			<name x="-518" y="501">Done_Transmitting</name>
+			<label kind="invariant" x="-493" y="484">x&lt;=Delta</label>
 		</location>
 		<location id="id18" x="-85" y="535">
 			<name x="-59" y="510">Main_Loop</name>
 			<committed/>
 		</location>
-		<location id="id19" x="187" y="918">
-			<name x="161" y="926">Receving</name>
-			<label kind="invariant" x="161" y="943">x &lt;= Delta</label>
+		<location id="id19" x="187" y="1037">
+			<name x="153" y="1045">Receving</name>
+			<label kind="invariant" x="153" y="1062">x &lt;= Delta</label>
 		</location>
-		<location id="id20" x="-382" y="918">
-			<name x="-501" y="926">Transmitting</name>
-			<label kind="invariant" x="-374" y="884">transmit_time&lt;=Real_Tx_Time</label>
+		<location id="id20" x="-467" y="1037">
+			<name x="-442" y="1046">Transmitting</name>
+			<label kind="invariant" x="-433" y="1011">transmit_time&lt;=Real_Tx_Time</label>
 		</location>
-		<location id="id21" x="-85" y="918">
-			<name x="-111" y="935">Tx_Or_Rx</name>
+		<location id="id21" x="-85" y="1037">
+			<name x="-111" y="1054">Tx_Or_Rx</name>
 			<committed/>
 		</location>
 		<location id="id22" x="-85" y="782">
@@ -234,24 +226,21 @@ void ClearJoiningID(){
 			<name x="127" y="-306">Network_Found</name>
 			<committed/>
 		</location>
-		<location id="id26" x="-340" y="-484">
-			<name x="-314" y="-527">Listen_For_Network</name>
-			<label kind="invariant" x="-323" y="-509">x &lt;= Initial_Wait_Time</label>
+		<location id="id26" x="-620" y="-484">
+			<name x="-765" y="-518">Listen_For_Network</name>
+			<label kind="invariant" x="-790" y="-476">x &lt;= Initial_Wait_Time</label>
 		</location>
-		<location id="id27" x="-382" y="-569">
-			<name x="-441" y="-603">Initialize</name>
-			<label kind="invariant" x="-560" y="-586">startup&lt;= Startup_Time</label>
+		<location id="id27" x="-569" y="-552">
+			<name x="-628" y="-586">Initialize</name>
+			<label kind="invariant" x="-747" y="-569">startup&lt;= Startup_Time</label>
 		</location>
 		<location id="id28" x="-170" y="-484">
-			<name x="-180" y="-518">L</name>
 			<committed/>
 		</location>
-		<location id="id29" x="-212" y="-136">
-			<name x="-222" y="-170">K</name>
+		<location id="id29" x="-348" y="-212">
 			<committed/>
 		</location>
-		<location id="id30" x="187" y="824">
-			<name x="177" y="790">H</name>
+		<location id="id30" x="187" y="875">
 			<committed/>
 		</location>
 		<location id="id31" x="544" y="238">
@@ -259,35 +248,27 @@ void ClearJoiningID(){
 			<committed/>
 		</location>
 		<location id="id32" x="450" y="119">
-			<name x="440" y="85">CC</name>
 			<committed/>
 		</location>
 		<location id="id33" x="1079" y="93">
-			<name x="1069" y="59">Wat</name>
 			<committed/>
 		</location>
 		<location id="id34" x="450" y="340">
-			<name x="440" y="306">GG</name>
 			<committed/>
 		</location>
 		<location id="id35" x="1071" y="229">
-			<name x="1061" y="195">Dank</name>
 			<committed/>
 		</location>
 		<location id="id36" x="391" y="-76">
-			<name x="381" y="-110">N</name>
 			<committed/>
 		</location>
 		<location id="id37" x="1173" y="-68">
-			<name x="1163" y="-102">Kappa</name>
 			<committed/>
 		</location>
 		<location id="id38" x="-841" y="535">
-			<name x="-851" y="501">B</name>
 			<committed/>
 		</location>
 		<location id="id39" x="-680" y="535">
-			<name x="-690" y="501">D</name>
 			<committed/>
 		</location>
 		<branchpoint id="id40" x="586" y="238">
@@ -310,68 +291,74 @@ void ClearJoiningID(){
 		</branchpoint>
 		<branchpoint id="id49" x="187" y="731">
 		</branchpoint>
-		<branchpoint id="id50" x="348" y="918">
+		<branchpoint id="id50" x="348" y="1037">
 		</branchpoint>
 		<init ref="id27"/>
 		<transition>
 			<source ref="id5"/>
 			<target ref="id18"/>
-			<label kind="guard" x="-280" y="408">x==Delta
+			<label kind="guard" x="-297" y="391">x==Delta
 and Connected == true
 and k == 1</label>
-			<label kind="assignment" x="-178" y="408">x:=0</label>
+			<label kind="assignment" x="-170" y="382">x:=0</label>
 			<nail x="-144" y="433"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id5"/>
-			<label kind="guard" x="-85" y="182">transmit_time == Real_Tx_Time
+			<label kind="guard" x="-34" y="68">transmit_time == Real_Tx_Time
 and Transmitters &gt; 1 and
-transmissionNumber == Number_Of_Transmits_Pr_Slot</label>
+transmissionNumber ==
+Number_Of_Transmits_Pr_Slot</label>
+			<nail x="-161" y="76"/>
+			<nail x="-42" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-17" y="85">transmit_time == Real_Tx_Time
+			<label kind="guard" x="-484" y="34">transmit_time == Real_Tx_Time
 and Transmitters &gt; 1 and
-transmissionNumber &lt; Number_Of_Transmits_Pr_Slot</label>
-			<label kind="assignment" x="-34" y="144">transmit_time:=0,
+transmissionNumber 
+&lt; Number_Of_Transmits_Pr_Slot</label>
+			<label kind="assignment" x="-425" y="-8">transmit_time:=0,
 transmissionNumber++</label>
-			<nail x="-17" y="153"/>
-			<nail x="17" y="85"/>
+			<nail x="-238" y="34"/>
+			<nail x="-280" y="0"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id5"/>
-			<label kind="guard" x="-314" y="229">transmit_time == Real_Tx_Time
+			<label kind="guard" x="-382" y="178">transmit_time == Real_Tx_Time
 and transmissionNumber 
 == Number_Of_Transmits_Pr_Slot
 and Transmitters == 1</label>
-			<label kind="synchronisation" x="-246" y="212">transmit!</label>
-			<label kind="assignment" x="-306" y="187">attempt_Join_Network()</label>
-			<nail x="-153" y="297"/>
+			<label kind="synchronisation" x="-246" y="144">transmit!</label>
+			<label kind="assignment" x="-340" y="161">attempt_Join_Network()</label>
+			<nail x="-178" y="76"/>
+			<nail x="-221" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-374" y="8">transmit_time == Real_Tx_Time
+			<label kind="guard" x="-357" y="-161">transmit_time == Real_Tx_Time
 and transmissionNumber 
 &lt; Number_Of_Transmits_Pr_Slot
 and Transmitters == 1</label>
-			<label kind="synchronisation" x="-204" y="68">transmit!</label>
-			<label kind="assignment" x="-331" y="85">attempt_Join_Network(),
+			<label kind="synchronisation" x="-263" y="-51">transmit!</label>
+			<label kind="assignment" x="-374" y="-85">attempt_Join_Network(),
 transmissionNumber++,
 transmit_time:=0</label>
-			<nail x="-144" y="17"/>
-			<nail x="-204" y="68"/>
+			<nail x="-110" y="-93"/>
+			<nail x="-204" y="-93"/>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id7"/>
-			<label kind="guard" x="850" y="544">Transmitters &gt; 1 and 
+			<label kind="guard" x="918" y="527">Transmitters &gt; 1 and 
 transmit_time == Real_Tx_Time
-and transmissionNumber &lt; Number_Of_Transmits_Pr_Slot</label>
-			<label kind="assignment" x="952" y="612">transmissionNumber++,
+and transmissionNumber 
+&lt; Number_Of_Transmits_Pr_Slot</label>
+			<label kind="assignment" x="960" y="603">transmissionNumber++,
 transmit_time:=0</label>
 			<nail x="1147" y="586"/>
 			<nail x="1105" y="620"/>
@@ -379,13 +366,14 @@ transmit_time:=0</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id5"/>
-			<label kind="guard" x="595" y="824">Transmitters == 1 and
+			<label kind="guard" x="544" y="722">Transmitters == 1 and
 transmit_time == Real_Tx_Time
-and transmissionNumber == Number_Of_Transmits_Pr_Slot</label>
-			<label kind="synchronisation" x="748" y="824">transmit!</label>
-			<label kind="assignment" x="816" y="816">join_Network()</label>
-			<nail x="629" y="807"/>
-			<nail x="391" y="722"/>
+and transmissionNumber ==
+Number_Of_Transmits_Pr_Slot</label>
+			<label kind="synchronisation" x="765" y="722">transmit!</label>
+			<label kind="assignment" x="841" y="722">join_Network()</label>
+			<nail x="1139" y="722"/>
+			<nail x="374" y="722"/>
 			<nail x="374" y="374"/>
 		</transition>
 		<transition>
@@ -393,18 +381,19 @@ and transmissionNumber == Number_Of_Transmits_Pr_Slot</label>
 			<target ref="id7"/>
 			<label kind="guard" x="1096" y="799">Transmitters == 1 and
 transmit_time == Real_Tx_Time
-and transmissionNumber &lt; Number_Of_Transmits_Pr_Slot</label>
+and transmissionNumber 
+&lt; Number_Of_Transmits_Pr_Slot</label>
 			<label kind="synchronisation" x="1147" y="782">transmit!</label>
-			<label kind="assignment" x="1317" y="782">join_Network(),
+			<label kind="assignment" x="1232" y="739">join_Network(),
 transmissionNumber++,
 transmit_time:=0</label>
 			<nail x="1147" y="765"/>
-			<nail x="1224" y="773"/>
+			<nail x="1224" y="765"/>
 		</transition>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-493" y="620">Transmitters &gt;= 2 and
+			<label kind="guard" x="-527" y="714">Transmitters &gt;= 2 and
 transmit_time 
 == Real_Tx_Time
 and transmissionNumber 
@@ -413,70 +402,71 @@ and transmissionNumber
 		<transition>
 			<source ref="id20"/>
 			<target ref="id20"/>
-			<label kind="guard" x="-459" y="807">Transmitters &gt;= 2 and
+			<label kind="guard" x="-425" y="876">Transmitters &gt;= 2 and
 transmit_time 
 == Real_Tx_Time
-and transmissionNumber &lt; Number_Of_Transmits_Pr_Slot</label>
-			<label kind="assignment" x="-364" y="896">transmissionNumber++</label>
-			<nail x="-255" y="875"/>
-			<nail x="-323" y="833"/>
+and transmissionNumber 
+&lt; Number_Of_Transmits_Pr_Slot</label>
+			<label kind="assignment" x="-391" y="969">transmissionNumber++</label>
+			<nail x="-399" y="994"/>
+			<nail x="-425" y="978"/>
 		</transition>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id38"/>
-			<label kind="guard" x="-875" y="578">transmit_time == Real_Tx_Time
+			<label kind="guard" x="-841" y="586">transmit_time == Real_Tx_Time
 and Transmitters == 1 
 and joining_ID != -1
 and transmissionNumber ==
 Number_Of_Transmits_Pr_Slot</label>
-			<label kind="assignment" x="-841" y="705">make_Payload()</label>
-			<nail x="-841" y="756"/>
+			<label kind="assignment" x="-841" y="680">make_Payload()</label>
+			<nail x="-841" y="858"/>
 		</transition>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id20"/>
-			<label kind="synchronisation" x="-765" y="841">transmit!</label>
+			<label kind="synchronisation" x="-816" y="935">transmit!</label>
 		</transition>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-697" y="680">transmissionNumber == 
+			<label kind="guard" x="-782" y="722">transmissionNumber == 
 Number_Of_Transmits_Pr_Slot
 and transmit_time 
 == Real_Tx_Time
 and joining_ID == -1
 and Transmitters == 1</label>
-			<label kind="synchronisation" x="-637" y="637">transmit!</label>
-			<label kind="assignment" x="-603" y="799">make_Payload()</label>
+			<label kind="synchronisation" x="-663" y="705">transmit!</label>
+			<label kind="assignment" x="-714" y="833">make_Payload()</label>
 			<nail x="-612" y="824"/>
 			<nail x="-612" y="629"/>
 		</transition>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id20"/>
-			<label kind="guard" x="-501" y="1003">transmissionNumber &lt; 
+			<label kind="guard" x="-569" y="1122">transmissionNumber &lt; 
 Number_Of_Transmits_Pr_Slot
 and transmit_time == 
 Real_Tx_Time
 and joining_ID == -1
 and Transmitters == 1</label>
-			<label kind="synchronisation" x="-323" y="977">transmit!</label>
-			<label kind="assignment" x="-297" y="994">make_Payload(),
+			<label kind="synchronisation" x="-408" y="1122">transmit!</label>
+			<label kind="assignment" x="-416" y="1173">make_Payload(),
 transmissionNumber++,
 transmit_time:=0</label>
-			<nail x="-323" y="994"/>
-			<nail x="-416" y="994"/>
+			<nail x="-382" y="1122"/>
+			<nail x="-459" y="1122"/>
 		</transition>
 		<transition>
 			<source ref="id49"/>
 			<target ref="id16"/>
 			<label kind="assignment" x="187" y="650">receive()</label>
-			<label kind="probability" x="187" y="667">98</label>
+			<label kind="probability" x="187" y="667">receiveChance</label>
 		</transition>
 		<transition>
 			<source ref="id49"/>
 			<target ref="id19"/>
-			<label kind="probability" x="144" y="765">2</label>
+			<label kind="probability" x="85" y="748">missChance</label>
 			<nail x="144" y="807"/>
 		</transition>
 		<transition>
@@ -492,45 +482,45 @@ transmit_time:=0</label>
 		<transition>
 			<source ref="id44"/>
 			<target ref="id10"/>
-			<label kind="probability" x="1089" y="280">2</label>
+			<label kind="probability" x="1089" y="280">missChance</label>
 			<nail x="1071" y="263"/>
 			<nail x="1139" y="263"/>
 		</transition>
 		<transition>
 			<source ref="id45"/>
 			<target ref="id10"/>
-			<label kind="probability" x="1054" y="102">2</label>
+			<label kind="probability" x="1054" y="102">missChance</label>
 			<nail x="1096" y="119"/>
 			<nail x="1130" y="119"/>
 		</transition>
 		<transition>
 			<source ref="id43"/>
 			<target ref="id10"/>
-			<label kind="probability" x="1139" y="-17">2</label>
+			<label kind="probability" x="1139" y="-17">missChance</label>
 		</transition>
 		<transition>
 			<source ref="id42"/>
 			<target ref="id12"/>
-			<label kind="probability" x="493" y="93">2</label>
+			<label kind="probability" x="493" y="93">missChance</label>
 			<nail x="501" y="119"/>
 		</transition>
 		<transition>
 			<source ref="id40"/>
 			<target ref="id12"/>
-			<label kind="probability" x="578" y="255">2</label>
+			<label kind="probability" x="578" y="255">missChance</label>
 			<nail x="535" y="280"/>
 		</transition>
 		<transition>
 			<source ref="id41"/>
 			<target ref="id12"/>
-			<label kind="probability" x="475" y="297">2</label>
+			<label kind="probability" x="475" y="297">missChance</label>
 		</transition>
 		<transition>
 			<source ref="id24"/>
 			<target ref="id14"/>
 			<label kind="guard" x="501" y="-102">x == Delta</label>
-			<nail x="493" y="-42"/>
-			<nail x="493" y="-144"/>
+			<nail x="501" y="-34"/>
+			<nail x="501" y="-153"/>
 		</transition>
 		<transition>
 			<source ref="id37"/>
@@ -576,7 +566,7 @@ transmit_time:=0</label>
 			<source ref="id40"/>
 			<target ref="id9"/>
 			<label kind="assignment" x="612" y="195">receive()</label>
-			<label kind="probability" x="586" y="212">98</label>
+			<label kind="probability" x="586" y="212">receiveChance</label>
 			<nail x="587" y="238"/>
 			<nail x="705" y="238"/>
 		</transition>
@@ -589,7 +579,7 @@ transmit_time:=0</label>
 			<source ref="id41"/>
 			<target ref="id9"/>
 			<label kind="assignment" x="561" y="340">receive()</label>
-			<label kind="probability" x="552" y="314">98</label>
+			<label kind="probability" x="552" y="314">receiveChance</label>
 			<nail x="748" y="340"/>
 		</transition>
 		<transition>
@@ -603,7 +593,7 @@ transmit_time:=0</label>
 			<target ref="id9"/>
 			<label kind="assignment" x="612" y="-25">receive(),
 join_Count++</label>
-			<label kind="probability" x="511" y="34">98</label>
+			<label kind="probability" x="511" y="34">receiveChance</label>
 			<nail x="493" y="34"/>
 			<nail x="748" y="34"/>
 		</transition>
@@ -619,7 +609,7 @@ join_Count++</label>
 			<target ref="id9"/>
 			<label kind="assignment" x="875" y="-127">receive(),
 join_Count++</label>
-			<label kind="probability" x="969" y="-85">98</label>
+			<label kind="probability" x="969" y="-85">receiveChance</label>
 			<nail x="816" y="-68"/>
 		</transition>
 		<transition>
@@ -632,7 +622,7 @@ join_Count++</label>
 			<source ref="id44"/>
 			<target ref="id9"/>
 			<label kind="assignment" x="926" y="229">receive()</label>
-			<label kind="probability" x="994" y="229">98</label>
+			<label kind="probability" x="892" y="204">receiveChance</label>
 			<nail x="884" y="229"/>
 		</transition>
 		<transition>
@@ -645,7 +635,7 @@ join_Count++</label>
 			<source ref="id45"/>
 			<target ref="id9"/>
 			<label kind="assignment" x="969" y="17">receive()</label>
-			<label kind="probability" x="935" y="42">98</label>
+			<label kind="probability" x="935" y="42">receiveChance</label>
 			<nail x="1037" y="59"/>
 			<nail x="901" y="59"/>
 		</transition>
@@ -657,14 +647,14 @@ join_Count++</label>
 		<transition>
 			<source ref="id46"/>
 			<target ref="id14"/>
-			<label kind="probability" x="433" y="-127">2</label>
+			<label kind="probability" x="416" y="-144">missChance</label>
 			<nail x="425" y="-110"/>
 		</transition>
 		<transition>
 			<source ref="id46"/>
 			<target ref="id14"/>
 			<label kind="assignment" x="280" y="-136">receive()</label>
-			<label kind="probability" x="348" y="-102">98</label>
+			<label kind="probability" x="263" y="-119">receiveChance</label>
 			<nail x="357" y="-110"/>
 		</transition>
 		<transition>
@@ -676,13 +666,13 @@ join_Count++</label>
 			<source ref="id47"/>
 			<target ref="id15"/>
 			<label kind="assignment" x="-8" y="-527">receive()</label>
-			<label kind="probability" x="-51" y="-510">98</label>
+			<label kind="probability" x="-51" y="-510">receiveChance</label>
 		</transition>
 		<transition>
 			<source ref="id47"/>
 			<target ref="id26"/>
-			<label kind="probability" x="-170" y="-442">2</label>
-			<nail x="-195" y="-433"/>
+			<label kind="probability" x="-348" y="-425">missChance</label>
+			<nail x="-357" y="-425"/>
 		</transition>
 		<transition>
 			<source ref="id26"/>
@@ -693,23 +683,23 @@ join_Count++</label>
 			<source ref="id48"/>
 			<target ref="id15"/>
 			<label kind="assignment" x="-76" y="-408">receive()</label>
-			<label kind="probability" x="0" y="-416">98</label>
+			<label kind="probability" x="0" y="-416">receiveChance</label>
 		</transition>
 		<transition>
 			<source ref="id48"/>
 			<target ref="id3"/>
-			<label kind="probability" x="-263" y="-229">2</label>
-			<nail x="-272" y="-195"/>
+			<label kind="probability" x="-408" y="-289">missChance</label>
+			<nail x="-374" y="-255"/>
 		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id29"/>
-			<label kind="synchronisation" x="-263" y="-93">transmit?</label>
+			<label kind="synchronisation" x="-484" y="-204">transmit?</label>
 		</transition>
 		<transition>
 			<source ref="id19"/>
 			<target ref="id30"/>
-			<label kind="synchronisation" x="204" y="824">transmit?</label>
+			<label kind="synchronisation" x="195" y="918">transmit?</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
@@ -731,110 +721,112 @@ and local_n &gt; 2</label>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-1055" y="1189">randomBackoff : int[0,31]</label>
-			<label kind="guard" x="-1063" y="1206">StartAttempts &gt;= 5</label>
-			<label kind="assignment" x="-901" y="1207">backoff = randomBackoff</label>
-			<nail x="348" y="1232"/>
-			<nail x="-1080" y="1231"/>
+			<label kind="select" x="-1055" y="1444">randomBackoff : int[0,31]</label>
+			<label kind="guard" x="-1063" y="1461">StartAttempts &gt;= 5</label>
+			<label kind="assignment" x="-901" y="1462">backoff = randomBackoff</label>
+			<nail x="348" y="1478"/>
+			<nail x="-1072" y="1409"/>
 			<nail x="-1079" y="-484"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-1012" y="1138">randomBackoff : int[0,15]</label>
-			<label kind="guard" x="-1021" y="1155">StartAttempts == 4</label>
-			<label kind="assignment" x="-875" y="1156">backoff = randomBackoff</label>
-			<nail x="348" y="1181"/>
-			<nail x="-1038" y="1180"/>
+			<label kind="select" x="-1012" y="1393">randomBackoff : int[0,15]</label>
+			<label kind="guard" x="-1021" y="1410">StartAttempts == 4</label>
+			<label kind="assignment" x="-875" y="1411">backoff = randomBackoff</label>
+			<nail x="348" y="1436"/>
+			<nail x="-1038" y="1435"/>
 			<nail x="-1037" y="-484"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-978" y="1095">randomBackoff : int[0,7]</label>
-			<label kind="guard" x="-978" y="1112">StartAttempts == 3</label>
-			<label kind="assignment" x="-833" y="1122">backoff = randomBackoff</label>
-			<nail x="348" y="1138"/>
-			<nail x="-995" y="1138"/>
+			<label kind="select" x="-978" y="1350">randomBackoff : int[0,7]</label>
+			<label kind="guard" x="-978" y="1367">StartAttempts == 3</label>
+			<label kind="assignment" x="-833" y="1377">backoff = randomBackoff</label>
+			<nail x="348" y="1393"/>
+			<nail x="-995" y="1393"/>
 			<nail x="-994" y="-484"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-902" y="1044">randomBackoff : int[0,3]</label>
-			<label kind="guard" x="-919" y="1061">StartAttempts == 2</label>
-			<label kind="assignment" x="-782" y="1062">backoff = randomBackoff</label>
-			<nail x="348" y="1087"/>
-			<nail x="-944" y="1087"/>
+			<label kind="select" x="-902" y="1299">randomBackoff : int[0,3]</label>
+			<label kind="guard" x="-919" y="1316">StartAttempts == 2</label>
+			<label kind="assignment" x="-782" y="1317">backoff = randomBackoff</label>
+			<nail x="348" y="1342"/>
+			<nail x="-944" y="1342"/>
 			<nail x="-943" y="-484"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id26"/>
-			<label kind="select" x="-858" y="994">randomBackoff : int[0,1]</label>
-			<label kind="guard" x="-867" y="1011">StartAttempts == 1</label>
-			<label kind="assignment" x="-748" y="1028">backoff = randomBackoff</label>
-			<nail x="-884" y="1045"/>
+			<label kind="select" x="-858" y="1249">randomBackoff : int[0,1]</label>
+			<label kind="guard" x="-867" y="1266">StartAttempts == 1</label>
+			<label kind="assignment" x="-748" y="1283">backoff = randomBackoff</label>
+			<nail x="-884" y="1300"/>
 			<nail x="-884" y="-484"/>
 		</transition>
 		<transition>
 			<source ref="id50"/>
 			<target ref="id0"/>
-			<label kind="assignment" x="357" y="952">Connected = false,
+			<label kind="assignment" x="365" y="1062">Connected = false,
 Connected_Counter--,
 StartAttempts++</label>
-			<label kind="probability" x="357" y="926">10</label>
+			<label kind="probability" x="365" y="1122">KillChance</label>
 		</transition>
 		<transition>
 			<source ref="id50"/>
 			<target ref="id18"/>
-			<label kind="probability" x="357" y="884">90</label>
+			<label kind="probability" x="357" y="977">StayAliveChance</label>
 			<nail x="348" y="485"/>
 			<nail x="-34" y="485"/>
 		</transition>
 		<transition>
 			<source ref="id19"/>
 			<target ref="id50"/>
-			<label kind="guard" x="229" y="858">x==Delta
+			<label kind="guard" x="212" y="994">x==Delta
 and local_n == 2</label>
-			<label kind="assignment" x="229" y="893">x:=0</label>
+			<label kind="assignment" x="238" y="1037">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id6"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-110" y="-8">local_i == local_n 
+			<label kind="guard" x="-136" y="-17">local_i == local_n 
 and x == Delta_Proc
 and joining_ID == -1</label>
-			<label kind="assignment" x="-17" y="-25">transmit_time=0,
+			<label kind="assignment" x="0" y="-17">transmit_time=0,
 Transmitters++</label>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-374" y="646">transmit_time == Number_Of_Transmits_Pr_Slot*Real_Tx_Time</label>
+			<label kind="guard" x="-357" y="612">transmit_time == 
+Number_Of_Transmits_Pr_Slot*
+Real_Tx_Time</label>
 		</transition>
 		<transition>
 			<source ref="id21"/>
 			<target ref="id2"/>
-			<label kind="guard" x="-272" y="765">local_i == k 
+			<label kind="guard" x="-229" y="850">local_i == k 
 and Transmitters &gt; 0</label>
-			<label kind="assignment" x="-280" y="816">transmit_time:=0,
+			<label kind="assignment" x="-229" y="884">transmit_time:=0,
 Transmitters++</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id5"/>
-			<label kind="guard" x="544" y="637">Transmitters &gt; 1 and
+			<label kind="guard" x="646" y="637">Transmitters &gt; 1 and
 transmit_time == Real_Tx_Time
 and transmissionNumber == Number_Of_Transmits_Pr_Slot</label>
-			<label kind="assignment" x="467" y="518">k=local_n,
+			<label kind="assignment" x="493" y="578">k=local_n,
 local_n++,
 Connected=true,
 Connected_Counter++,
 joining_ID = -1,
 transmissionNumber++</label>
-			<nail x="1011" y="637"/>
-			<nail x="399" y="637"/>
+			<nail x="1003" y="697"/>
+			<nail x="399" y="697"/>
 			<nail x="399" y="340"/>
 		</transition>
 		<transition>
@@ -866,26 +858,26 @@ ClearJoiningID()</label>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-603" y="-68">x==Delta and
+			<label kind="guard" x="-883" y="-255">x==Delta and
 StartLoopCount &lt;= backoff</label>
-			<label kind="assignment" x="-552" y="-17">StartLoopCount++,
+			<label kind="assignment" x="-824" y="-204">StartLoopCount++,
 x:=0</label>
-			<nail x="-416" y="-67"/>
-			<nail x="-416" y="35"/>
+			<nail x="-696" y="-254"/>
+			<nail x="-696" y="-152"/>
 		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id5"/>
-			<label kind="guard" x="-331" y="340">x == Delta and
+			<label kind="guard" x="-611" y="340">x == Delta and
 StartLoopCount &gt;= backoff</label>
-			<label kind="assignment" x="-331" y="374">create_Network()</label>
-			<nail x="-340" y="340"/>
+			<label kind="assignment" x="-611" y="374">create_Network()</label>
+			<nail x="-620" y="340"/>
 		</transition>
 		<transition>
 			<source ref="id26"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-331" y="-331">x == Initial_Wait_Time</label>
-			<label kind="assignment" x="-331" y="-314">x:=0</label>
+			<label kind="guard" x="-612" y="-374">x == Initial_Wait_Time</label>
+			<label kind="assignment" x="-612" y="-357">x:=0</label>
 		</transition>
 		<transition>
 			<source ref="id8"/>
@@ -977,9 +969,9 @@ global_transmissionNumber = 1</label>
 		<transition>
 			<source ref="id5"/>
 			<target ref="id12"/>
-			<label kind="guard" x="246" y="136">x==Delta and 
+			<label kind="guard" x="85" y="178">x==Delta and 
 Connected == false</label>
-			<label kind="assignment" x="204" y="153">x:=0,
+			<label kind="assignment" x="0" y="195">x:=0,
 Transmitters--,
 transmissionNumber = 1</label>
 			<nail x="229" y="221"/>
@@ -999,9 +991,9 @@ joining_ID != -1</label>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id7"/>
-			<label kind="guard" x="1181" y="603">local_i == local_n
+			<label kind="guard" x="1181" y="535">local_i == local_n
 and join_Count &gt;= Min_Units_For_Join</label>
-			<label kind="assignment" x="1181" y="646">transmit_time:=0,
+			<label kind="assignment" x="1190" y="569">transmit_time:=0,
 Transmitters++</label>
 		</transition>
 		<transition>
@@ -1027,17 +1019,17 @@ calc_Min_Validate()</label>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-833" y="892">transmit_time== Real_Tx_Time
+			<label kind="guard" x="-859" y="1020">transmit_time== Real_Tx_Time
 and Transmitters == 1 
 and joining_ID != -1
 and transmissionNumber &lt;
 Number_Of_Transmits_Pr_Slot</label>
-			<label kind="synchronisation" x="-833" y="867">join!</label>
-			<label kind="assignment" x="-629" y="943">make_Payload(),
+			<label kind="synchronisation" x="-859" y="995">join!</label>
+			<label kind="assignment" x="-858" y="1113">make_Payload(),
 transmissionNumber++,
 transmit_time:=0</label>
-			<nail x="-501" y="986"/>
-			<nail x="-841" y="986"/>
+			<nail x="-527" y="1114"/>
+			<nail x="-867" y="1114"/>
 		</transition>
 		<transition>
 			<source ref="id14"/>
@@ -1060,8 +1052,8 @@ transmit_time:=0</label>
 		<transition>
 			<source ref="id17"/>
 			<target ref="id18"/>
-			<label kind="guard" x="-212" y="510">x == Delta</label>
-			<label kind="assignment" x="-323" y="493">x:=0,
+			<label kind="guard" x="-340" y="535">x == Delta</label>
+			<label kind="assignment" x="-348" y="450">x:=0,
 Transmitters--,
 transmissionNumber = 1,
 global_transmissionNumber = 1</label>
@@ -1078,8 +1070,8 @@ global_transmissionNumber = 1</label>
 		<transition>
 			<source ref="id21"/>
 			<target ref="id20"/>
-			<label kind="guard" x="-323" y="918">local_i == k and Transmitters == 0</label>
-			<label kind="assignment" x="-306" y="935">transmit_time:=0,
+			<label kind="guard" x="-348" y="1037">local_i == k and Transmitters == 0</label>
+			<label kind="assignment" x="-348" y="1054">transmit_time:=0,
 Transmitters++</label>
 		</transition>
 		<transition>
@@ -1140,7 +1132,7 @@ system Device;
 			</comment>
 		</query>
 		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) (time &gt;3000) and  Device(i).local_n == N+1)
+			<formula>Pr[&lt;=300000] ( &lt;&gt;  forall(i: id_t) forall(j: id_t) (time &gt;3000) and  ((Device(i).local_n == N+1 and Device(i).local_network_id == Device(j).local_network_id)))
 			</formula>
 			<comment>
 			</comment>

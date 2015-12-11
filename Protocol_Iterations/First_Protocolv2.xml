@@ -2,8 +2,8 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-int n = 2;                             // Number of Timeslots connected
-int i = 1;                             // Current time slot in the frame
+int n = 0;                             // Number of Timeslots connected
+int i = 0;                             // Current time slot in the frame
 int Connected_Counter = 0;             //Global Counter for Connected Devices
 const int Delta = 250;                 //Timeslot Length
 const int Delta_Proc = Delta/5;
@@ -13,7 +13,7 @@ const int Initial_Wait_Time = Delta*3;
 int Startup_Time = Initial_Wait_Time*2;
 int Transmitters = 0;
 clock startup;
-clock m;
+clock time;
 
 //Channel
 broadcast chan transmit;
@@ -27,12 +27,12 @@ typedef int[1,N] id_t;</declaration>
 		<declaration>// Place local declarations here.
 clock x;
 clock transmit_time;
-int k = 1;                     //Timeslot
+int k = -1;                     //Timeslot
 bool Connected = false;
 
 // Local copies of globals
-int local_n = 2;                // Number of devices connected
-int local_i = 1;               // Current time slot in the frame
+int local_n = 0;                // Number of devices connected
+int local_i = 0;               // Current time slot in the frame
 
 void increment_Slot(){
     local_i = (local_i % local_n)+1;
@@ -84,10 +84,12 @@ void make_Payload(){
 			<label kind="invariant" x="59" y="25">x &lt;= Delta</label>
 		</location>
 		<location id="id3" x="510" y="467">
-			<label kind="invariant" x="484" y="433">x&lt;=Delta</label>
+			<name x="467" y="433">Just_Received</name>
+			<label kind="invariant" x="484" y="416">x&lt;=Delta</label>
 		</location>
 		<location id="id4" x="-42" y="467">
-			<label kind="invariant" x="-68" y="433">x&lt;=Delta</label>
+			<name x="-93" y="433">Done_Transmitting</name>
+			<label kind="invariant" x="-68" y="416">x&lt;=Delta</label>
 		</location>
 		<location id="id5" x="238" y="467">
 			<name x="246" y="442">Main_Loop</name>
@@ -325,6 +327,10 @@ system Device;
 			</formula>
 			<comment>
 			</comment>
+		</query>
+		<query>
+			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i: id_t) (time &gt;3000)</formula>
+			<comment></comment>
 		</query>
 		<query>
 			<formula>A[]  forall(i: id_t) Device(i).Connected imply Connected_Counter == n-1

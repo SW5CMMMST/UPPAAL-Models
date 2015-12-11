@@ -34,7 +34,7 @@ broadcast chan transmit;
 broadcast chan join;
 
 //Device Creation
-const int N = 5;
+const int N = 4;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
@@ -1054,7 +1054,7 @@ system Device;
     </system>
 	<queries>
 		<query>
-			<formula>A&lt;&gt;  forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and Device(i).k == Device(j).k imply i == j
+			<formula>A&lt;&gt;  forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and ( Device(i).k == Device(j).k imply i == j)
 			</formula>
 			<comment>
 			</comment>
