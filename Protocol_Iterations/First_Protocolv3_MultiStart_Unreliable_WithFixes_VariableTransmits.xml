@@ -10,8 +10,8 @@ int global_transmissionNumber = 1;     // Indicating the number of transmission 
 int network_id;                        // id of the network being transmitted from
 
 //States how reliable the  network is
-const int Number_Of_Transmits_Pr_Slot = 4;
-const int receiveChance = 92;
+const int Number_Of_Transmits_Pr_Slot = 1;
+const int receiveChance = 98;
 const int missChance = 100 - receiveChance;
 
 //Chance of killing the network when alone
@@ -725,7 +725,7 @@ and local_n &gt; 2</label>
 			<label kind="guard" x="-1063" y="1461">StartAttempts &gt;= 5</label>
 			<label kind="assignment" x="-901" y="1462">backoff = randomBackoff</label>
 			<nail x="348" y="1478"/>
-			<nail x="-1072" y="1409"/>
+			<nail x="-1079" y="1479"/>
 			<nail x="-1079" y="-484"/>
 		</transition>
 		<transition>
