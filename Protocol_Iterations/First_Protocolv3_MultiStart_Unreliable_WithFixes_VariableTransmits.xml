@@ -62,12 +62,13 @@ int StartLoopCount = 0;
 int StartAttempts = 0;
 int FrameCount = 0;
 int randomBackoff;
-int local_network_id= -1;
+
 int transmissionNumber = 1;
 
 // Local copies of globals
 int local_n = 0;                // Number of devices connected
 int local_i = 0;               // Current time slot in the frame
+int local_network_id = -1;
 
 void increment_Slot(){
     local_i = (local_i % local_n)+1;
