@@ -287,7 +287,7 @@ system Device;
     </system>
 	<queries>
 		<query>
-			<formula>A&lt;&gt; forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected and (Device(i).k == Device(j).k imply i == j)
+			<formula>A[] forall(i: id_t) forall(j: id_t) Device(i).Connected and Device(j).Connected imply (Device(i).k == Device(j).k imply i == j)
 			</formula>
 			<comment>
 			</comment>
@@ -327,10 +327,6 @@ system Device;
 			</formula>
 			<comment>
 			</comment>
-		</query>
-		<query>
-			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i: id_t) (time &gt;3000)</formula>
-			<comment></comment>
 		</query>
 		<query>
 			<formula>A[]  forall(i: id_t) Device(i).Connected imply Connected_Counter == n-1
