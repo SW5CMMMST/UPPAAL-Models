@@ -19,7 +19,7 @@ clock time;
 broadcast chan transmit;
 
 //Device Creation
-const int N = 6;
+const int N = 3;
 typedef int[1,N] id_t;</declaration>
 	<template>
 		<name x="5" y="5">Device</name>
