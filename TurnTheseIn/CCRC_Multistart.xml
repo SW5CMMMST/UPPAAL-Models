@@ -209,6 +209,7 @@ Real_Tx_Time</label>
 		</location>
 		<location id="id24" x="390" y="-17">
 			<name x="416" y="-34">Receiving_Not_Connected</name>
+			<label kind="invariant" x="380" y="0">x&lt;=Delta</label>
 		</location>
 		<location id="id25" x="110" y="-289">
 			<name x="127" y="-306">Network_Found</name>
@@ -229,6 +230,12 @@ Real_Tx_Time</label>
 		<branchpoint id="id29" x="348" y="918">
 		</branchpoint>
 		<init ref="id27"/>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id23"/>
+			<label kind="guard" x="238" y="-119">x==Delta</label>
+			<label kind="assignment" x="263" y="-102">x:=0</label>
+		</transition>
 		<transition>
 			<source ref="id28"/>
 			<target ref="id5"/>
@@ -283,7 +290,7 @@ and local_n &gt; 2</label>
 			<target ref="id26"/>
 			<label kind="select" x="-978" y="1095">randomBackoff : int[0,7]</label>
 			<label kind="guard" x="-978" y="1112">StartAttempts == 3</label>
-			<label kind="assignment" x="-833" y="1122">backoff = randomBackoff</label>
+			<label kind="assignment" x="-824" y="1113">backoff = randomBackoff</label>
 			<nail x="348" y="1138"/>
 			<nail x="-995" y="1138"/>
 			<nail x="-995" y="-485"/>
@@ -567,7 +574,7 @@ transmit_time == Real_Tx_Time</label>
 		<transition>
 			<source ref="id5"/>
 			<target ref="id12"/>
-			<label kind="guard" x="280" y="161">x==Delta and 
+			<label kind="guard" x="272" y="161">x==Delta and 
 Connected == false</label>
 			<label kind="assignment" x="280" y="195">x:=0,
 Transmitters--</label>
@@ -775,7 +782,7 @@ system Device;
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000)  and (Device(i).Connected and Device(j).Connected imply (Device(i).k &lt; Device(j).local_n and Device(i).k &gt; 0) and Device(i).local_network_id == Device(j).local_network_id))
 			</formula>
 			<comment>
-			</comment>
+			hgggd</comment>
 		</query>
 		<query>
 			<formula>Pr[&lt;=300000] ( &lt;&gt; forall(i : id_t) forall(j : id_t) (time &gt; 3000)  and (Device(i).Connected and Device(j).Connected  imply ((Device(i).local_n == Device(j).local_n) and Device(i).local_network_id == Device(j).local_network_id)))
